@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestUrl } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getServerSession } from "./auth";
@@ -19,8 +20,10 @@ export const inviteAdminFn = createServerFn({ method: "POST" })
     }
 
     const supabaseAdmin = getSupabaseAdminClient();
+    const redirectTo = new URL("/accept-invite", getRequestUrl()).toString();
     const { error } = await supabaseAdmin.auth.admin.inviteUserByEmail(data.email, {
       data: { name: data.name },
+      redirectTo,
     });
     if (error) throw new Error(error.message);
   });
