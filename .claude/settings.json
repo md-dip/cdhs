@@ -22,7 +22,12 @@
       "Bash(where gh *)",
       "Bash(gh auth *)",
       "Bash(git --version)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(grep -iE \"^\\\\S+ \\\\.env$|node_modules\")",
+      "Bash(echo \"exit code: $?\")",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "WebFetch(domain:maps.app.goo.gl)"
     ]
   }
 }
