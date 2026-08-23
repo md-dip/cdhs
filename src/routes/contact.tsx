@@ -62,6 +62,25 @@ function Contact() {
               {tx(school.hours)}
             </li>
           </ul>
+          <div className="mt-5 overflow-hidden rounded-md border border-border">
+            <iframe
+              title={tx("বিদ্যালয়ের অবস্থান")}
+              src="https://www.google.com/maps?q=24.7667314,88.9777527&output=embed"
+              width="100%"
+              height="260"
+              loading="lazy"
+              className="block"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+          <a
+            href="https://maps.app.goo.gl/ztPYx13AS4FGoqZq7"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-3 inline-block text-xs font-medium text-brand hover:text-brand-deep"
+          >
+            {tx("গুগল ম্যাপে দেখুন")}
+          </a>
         </Panel>
 
         <Panel title={tx("বার্তা পাঠান")}>
