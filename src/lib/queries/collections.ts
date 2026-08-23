@@ -30,6 +30,19 @@ export type CollectionKey = (typeof COLLECTION_KEYS)[number];
 /** Collections with an admin-driven drag-and-drop display order (see `sort_order` column). */
 export const ORDERABLE_COLLECTIONS = new Set<CollectionKey>(["teachers", "committee"]);
 
+/**
+ * True when a Postgrest error means "the `sort_order` migration (supabase/schema.sql) hasn't
+ * been run against this database yet" — i.e. the column genuinely doesn't exist. Covers both
+ * shapes Postgrest can return: a real Postgres error from the query planner (42703, e.g. from
+ * `.order("sort_order")`) and its own schema-cache rejection for unknown JSON body keys (no
+ * standard Postgres code, just a "schema cache" message — happens on `.update({ sort_order })`).
+ */
+function isMissingSortOrderColumn(error: { code?: string | null; message?: string } | null) {
+  if (!error) return false;
+  if (error.code === "42703") return true;
+  return /schema cache/i.test(error.message ?? "");
+}
+
 function buildCollectionQuery(
   supabase: ReturnType<typeof getSupabaseServerClient>,
   key: CollectionKey,
@@ -54,10 +67,9 @@ const fetchCollectionFn = createServerFn({ method: "GET" })
       data.onlyPublished,
       orderable,
     );
-    // "42703" = undefined_column — the `sort_order` migration (supabase/schema.sql) hasn't
-    // been run against this database yet. Fall back to the pre-migration ordering instead
-    // of hard-erroring, so the site stays up while that migration is still pending.
-    if (orderable && error?.code === "42703") {
+    // Fall back to the pre-migration ordering instead of hard-erroring, so the site stays
+    // up while the sort_order migration is still pending.
+    if (orderable && isMissingSortOrderColumn(error)) {
       ({ data: rows, error } = await buildCollectionQuery(
         supabase,
         data.key,
@@ -174,8 +186,7 @@ export function useReorderRows(key: CollectionKey) {
       );
       const failed = results.find((r) => r.error);
       if (failed?.error) {
-        // See the matching comment in fetchCollectionFn — the DB migration is still pending.
-        if (failed.error.code === "42703") {
+        if (isMissingSortOrderColumn(failed.error)) {
           throw new Error(
             "ক্রম পরিবর্তন এখনো চালু হয়নি — ওয়েবসাইট আপডেট শেষ হওয়া পর্যন্ত অপেক্ষা করুন।",
           );
