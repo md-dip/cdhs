@@ -143,14 +143,17 @@ export const sections: SectionConfig[] = [
     orderable: true,
     columns: [
       { name: "name", label: "শ্রেণি" },
-      { name: "number", label: "শ্রেণি নম্বর" },
       { name: "seats", label: "আসন" },
+      { name: "boys", label: "ছাত্র সংখ্যা" },
+      { name: "girls", label: "ছাত্রী সংখ্যা" },
       { name: "admissionOpen", label: "ভর্তি আবেদন" },
     ],
     fields: [
       { name: "name", label: "শ্রেণির নাম" },
       { name: "number", label: "শ্রেণি নম্বর (ইংরেজি)" },
       { name: "seats", label: "আসন সংখ্যা" },
+      { name: "boys", label: "বর্তমান ছাত্র সংখ্যা" },
+      { name: "girls", label: "বর্তমান ছাত্রী সংখ্যা" },
       { name: "group", label: "বিভাগসমূহ" },
       { name: "rules", label: "বিষয় নির্বাচনের নিয়ম", type: "textarea", full: true },
       { name: "admissionOpen", label: "ভর্তি আবেদন", type: "select", options: ["on", "off"] },

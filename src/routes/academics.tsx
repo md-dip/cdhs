@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Layout, PageHeader, Panel } from "@/components/site/Layout";
-import { StudentsByClassTable } from "@/components/site/StudentsByClassTable";
+import { StudentsByClassPanel } from "@/components/site/StudentsByClassTable";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
 import { useT } from "@/lib/i18n";
 
 const title = "একাডেমিক তথ্য | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
 const description = "শ্রেণি ও আসন সংখ্যা, পাঠ্যপুস্তকের তালিকা এবং এসএসসি ফলাফলের তথ্য।";
 
-const ACADEMICS_COLLECTIONS = ["classes", "books", "results", "students"] as const;
+const ACADEMICS_COLLECTIONS = ["classes", "books", "results"] as const;
 
 export const Route = createFileRoute("/academics")({
   loader: ({ context }) =>
@@ -32,7 +32,6 @@ function Academics() {
   const classes = usePublished("classes");
   const books = usePublished("books");
   const results = usePublished("results");
-  const students = usePublished("students");
   return (
     <Layout>
       <PageHeader
@@ -67,11 +66,7 @@ function Academics() {
           </div>
         </Panel>
 
-        {students.length ? (
-          <Panel title={tx("শ্রেণি ও লিঙ্গভিত্তিক শিক্ষার্থীর সংখ্যা")}>
-            <StudentsByClassTable />
-          </Panel>
-        ) : null}
+        <StudentsByClassPanel title={tx("শ্রেণি ও লিঙ্গভিত্তিক শিক্ষার্থীর সংখ্যা")} />
 
         <Panel title={tx("পাঠ্যপুস্তকের তালিকা")}>
           <ul className="grid gap-3 text-sm md:grid-cols-3">

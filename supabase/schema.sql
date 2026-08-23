@@ -242,6 +242,8 @@ create table if not exists public.classes (
   rules text not null default '',
   "admissionOpen" text not null default 'on' check ("admissionOpen" in ('on', 'off')),
   status text not null default 'published' check (status in ('published', 'unpublished')),
+  boys text not null default '',
+  girls text not null default '',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -273,6 +275,10 @@ create table if not exists public.results (
 -- classes/books pre-date sort_order (same idempotent backfill as teachers/committee above).
 alter table public.classes add column if not exists sort_order integer not null default 0;
 alter table public.books add column if not exists sort_order integer not null default 0;
+
+-- classes pre-date boys/girls (per-class headcount, admin-entered — see StudentsByClassPanel).
+alter table public.classes add column if not exists boys text not null default '';
+alter table public.classes add column if not exists girls text not null default '';
 
 do $$
 declare
@@ -363,15 +369,24 @@ end $$;
 -- used to read this from static frontend code; now it reads these tables instead,
 -- so this keeps the public site's content unchanged until an admin edits it.
 -- ---------------------------------------------------------------------------
-insert into public.classes (name, seats, "group", sort_order)
+insert into public.classes (name, seats, "group", sort_order, boys, girls)
 select * from (values
-  ('ষষ্ঠ শ্রেণি', '১২০', 'সাধারণ', 1),
-  ('সপ্তম শ্রেণি', '১২০', 'সাধারণ', 2),
-  ('অষ্টম শ্রেণি', '১২০', 'সাধারণ', 3),
-  ('নবম শ্রেণি', '১৫০', 'বিজ্ঞান, মানবিক, ব্যবসায় শিক্ষা', 4),
-  ('দশম শ্রেণি', '১৫০', 'বিজ্ঞান, মানবিক, ব্যবসায় শিক্ষা', 5)
-) as seed(name, seats, "group", sort_order)
+  ('ষষ্ঠ শ্রেণি', '১২০', 'সাধারণ', 1, '৪৩', '৬২'),
+  ('সপ্তম শ্রেণি', '১২০', 'সাধারণ', 2, '৪৫', '৬৩'),
+  ('অষ্টম শ্রেণি', '১২০', 'সাধারণ', 3, '৫৮', '৩৫'),
+  ('নবম শ্রেণি', '১৫০', 'বিজ্ঞান, মানবিক, ব্যবসায় শিক্ষা', 4, '৪৫', '২৪'),
+  ('দশম শ্রেণি', '১৫০', 'বিজ্ঞান, মানবিক, ব্যবসায় শিক্ষা', 5, '৩৬', '২০')
+) as seed(name, seats, "group", sort_order, boys, girls)
 where not exists (select 1 from public.classes);
+
+-- If classes already existed (an earlier run of this file created them before boys/girls
+-- existed), backfill the same headcounts onto those rows instead — but only if an admin
+-- hasn't already typed something in, so this never overwrites a real edit.
+update public.classes set boys = '৪৩', girls = '৬২' where name = 'ষষ্ঠ শ্রেণি' and boys = '' and girls = '';
+update public.classes set boys = '৪৫', girls = '৬৩' where name = 'সপ্তম শ্রেণি' and boys = '' and girls = '';
+update public.classes set boys = '৫৮', girls = '৩৫' where name = 'অষ্টম শ্রেণি' and boys = '' and girls = '';
+update public.classes set boys = '৪৫', girls = '২৪' where name = 'নবম শ্রেণি' and boys = '' and girls = '';
+update public.classes set boys = '৩৬', girls = '২০' where name = 'দশম শ্রেণি' and boys = '' and girls = '';
 
 insert into public.books (name, code, sort_order)
 select * from (values
