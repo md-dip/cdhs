@@ -17,11 +17,35 @@ const fields: { name: string; label: string; type?: "textarea"; full?: boolean }
   { name: "eiin", label: "ইআইআইএন" },
   { name: "founded", label: "প্রতিষ্ঠার সাল" },
   { name: "motto", label: "প্রতিষ্ঠানের মূলমন্ত্র", full: true },
-  { name: "mission", label: "আমাদের লক্ষ্য", type: "textarea", full: true },
+  {
+    name: "glanceBn",
+    label: "এক নজরে বিদ্যালয় — বিবরণ (বাংলা)",
+    type: "textarea",
+    full: true,
+  },
+  {
+    name: "glanceEn",
+    label: "এক নজরে বিদ্যালয় — বিবরণ (ইংরেজি, না দিলে স্বয়ংক্রিয় অনুবাদ দেখানো হবে)",
+    type: "textarea",
+    full: true,
+  },
+  { name: "missionBn", label: "আমাদের লক্ষ্য (বাংলা)", type: "textarea", full: true },
+  {
+    name: "missionEn",
+    label: "আমাদের লক্ষ্য (ইংরেজি, না দিলে স্বয়ংক্রিয় অনুবাদ দেখানো হবে)",
+    type: "textarea",
+    full: true,
+  },
   { name: "headName", label: "প্রধান শিক্ষকের নাম" },
   { name: "headTitle", label: "প্রধান শিক্ষকের পদবি" },
   { name: "headPhoto", label: "প্রধান শিক্ষকের ছবির লিংক (মিডিয়া লাইব্রেরি থেকে)", full: true },
-  { name: "headMessage", label: "প্রধান শিক্ষকের বাণী", type: "textarea", full: true },
+  { name: "headMessageBn", label: "প্রধান শিক্ষকের বাণী (বাংলা)", type: "textarea", full: true },
+  {
+    name: "headMessageEn",
+    label: "প্রধান শিক্ষকের বাণী (ইংরেজি, না দিলে স্বয়ংক্রিয় অনুবাদ দেখানো হবে)",
+    type: "textarea",
+    full: true,
+  },
 ];
 
 function SettingsPage() {

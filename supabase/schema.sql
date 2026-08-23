@@ -246,6 +246,7 @@ create table if not exists public.pages (
   slug text unique,
   image text not null default '',
   body text not null default '',
+  "bodyEn" text not null default '',
   status text not null default 'published' check (status in ('published', 'unpublished')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -303,10 +304,14 @@ create table if not exists public.settings (
   "headName" text not null default '',
   "headTitle" text not null default '',
   "headPhoto" text not null default '',
-  "headMessage" text not null default '',
+  "headMessageBn" text not null default '',
+  "headMessageEn" text not null default '',
   motto text not null default '',
   founded text not null default '',
-  mission text not null default '',
+  "missionBn" text not null default '',
+  "missionEn" text not null default '',
+  "glanceBn" text not null default '',
+  "glanceEn" text not null default '',
   updated_at timestamptz not null default now()
 );
 

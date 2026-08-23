@@ -71,5 +71,9 @@ export function useT() {
     n: (value: string | number) =>
       current === "en" ? toEnDigits(String(value)) : toBnDigits(String(value)),
     tx: (value: string) => (current === "en" ? translate(String(value)) : String(value)),
+    // For admin-entered bilingual content (a Bengali version plus an optional
+    // English one): use the real English text if the admin wrote it, otherwise
+    // fall back to auto-translating the Bengali rather than showing nothing.
+    bt: (bn: string, en: string) => (current === "en" ? en || translate(bn) : bn),
   };
 }

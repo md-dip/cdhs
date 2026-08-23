@@ -29,12 +29,14 @@ export const Route = createFileRoute("/about")({
 });
 
 function About() {
-  const { tx, n } = useT();
+  const { tx, n, bt } = useT();
   const settings = useSettings();
   const founded = settings["founded"] || school.founded;
   const page = Route.useLoaderData();
-  const history = String(page?.["body"] || "") || HISTORY_FALLBACK;
-  const mission = settings["mission"] || MISSION_FALLBACK;
+  const historyBn = String(page?.["body"] || "") || HISTORY_FALLBACK;
+  const historyEn = String(page?.["bodyEn"] || "");
+  const missionBn = String(settings["missionBn"] || MISSION_FALLBACK);
+  const missionEn = String(settings["missionEn"] || "");
   return (
     <Layout>
       <PageHeader title={tx("প্রতিষ্ঠান পরিচিতি")} subtitle={tx(school.address)} />
@@ -47,7 +49,7 @@ function About() {
           />
           <Panel title={tx("সংক্ষিপ্ত ইতিহাস")}>
             <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
-              {tx(history)}
+              {bt(historyBn, historyEn)}
             </p>
           </Panel>
           <Panel title={tx("সুযোগ-সুবিধা")}>
@@ -83,7 +85,7 @@ function About() {
           </Panel>
           <Panel title={tx("আমাদের লক্ষ্য")}>
             <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
-              {tx(mission)}
+              {bt(missionBn, missionEn)}
             </p>
           </Panel>
         </aside>

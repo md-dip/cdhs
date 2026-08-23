@@ -26,6 +26,11 @@ const description =
 
 const HOME_COLLECTIONS = ["notices", "students", "classes", "teachers"] as const;
 
+const GLANCE_FALLBACK_BN =
+  "১৯৬৫ সালে প্রতিষ্ঠিত এই বিদ্যালয়টি বগুড়া জেলার আদমদীঘি উপজেলার ছাতনী ঢেকড়া এলাকায় অবস্থিত। ষষ্ঠ থেকে দশম শ্রেণি পর্যন্ত বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখায় পাঠদান করা হয়। ডিজিটাল বাংলাদেশ গড়ার লক্ষ্যে বিদ্যালয়ের সকল তথ্য এই ওয়েবসাইটে নিয়মিত হালনাগাদ করা হয়।";
+const GLANCE_FALLBACK_EN =
+  "Established in 1965, the school is located at Chhatni Dekhra in Adamdighi upazila of Bogura district. Classes six to ten are taught in the science, humanities and business studies streams. All school information is regularly updated on this website.";
+
 export const Route = createFileRoute("/")({
   loader: ({ context }) =>
     Promise.all(
@@ -56,7 +61,7 @@ const quickLinks = [
 
 function Index() {
   const [i, setI] = useState(0);
-  const { t, n, tx } = useT();
+  const { t, n, tx, bt } = useT();
   const settings = useSettings();
   const notices = usePublished("notices");
   useEffect(() => {
@@ -131,9 +136,9 @@ function Index() {
                 ))}
               </div>
               <p className="mt-5 text-sm leading-7 text-muted-foreground">
-                {t(
-                  "১৯৬৯ সালে প্রতিষ্ঠিত এই বিদ্যালয়টি বগুড়া জেলার আদমদীঘি উপজেলার ছাতনী ঢেকড়া এলাকায় অবস্থিত। ষষ্ঠ থেকে দশম শ্রেণি পর্যন্ত বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখায় পাঠদান করা হয়। ডিজিটাল বাংলাদেশ গড়ার লক্ষ্যে বিদ্যালয়ের সকল তথ্য এই ওয়েবসাইটে নিয়মিত হালনাগাদ করা হয়।",
-                  "Established in 1969, the school is located at Chhatni Dekhra in Adamdighi upazila of Bogura district. Classes six to ten are taught in the science, humanities and business studies streams. All school information is regularly updated on this website.",
+                {bt(
+                  settings["glanceBn"] || GLANCE_FALLBACK_BN,
+                  settings["glanceEn"] || GLANCE_FALLBACK_EN,
                 )}
               </p>
             </Panel>
@@ -152,7 +157,10 @@ function Index() {
                   <p className="text-xs text-muted-foreground">{tx(settings["headTitle"] ?? "")}</p>
                 </div>
                 <blockquote className="border-s-4 border-gold ps-5 text-sm leading-7 text-muted-foreground">
-                  {tx(settings["headMessage"] ?? "")}
+                  {bt(
+                    String(settings["headMessageBn"] ?? ""),
+                    String(settings["headMessageEn"] ?? ""),
+                  )}
                 </blockquote>
               </div>
             </Panel>

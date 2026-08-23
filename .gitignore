@@ -33,6 +33,10 @@ dist-ssr
 # Local tool state / template metadata — not needed to run or deploy the site
 .claude/
 .lovable/
+
+# Deliberately using npm (package-lock.json) as the single source of truth —
+# a stale bun.lock previously broke the Cloudflare build. Never commit this.
+bun.lock
 .DS_Store
 *.suo
 *.ntvs*
