@@ -438,6 +438,7 @@ create table if not exists public.settings (
   "glanceEn" text not null default '',
   "classroomCount" text not null default '',
   "passRate" text not null default '',
+  "officeHours" text not null default '',
   updated_at timestamptz not null default now()
 );
 
@@ -450,6 +451,12 @@ alter table public.settings add column if not exists "classroomCount" text not n
 alter table public.settings add column if not exists "passRate" text not null default '';
 update public.settings set "classroomCount" = '১৮', "passRate" = '৯৭'
   where id = 1 and "classroomCount" = '' and "passRate" = '';
+
+-- officeHours pre-dates this table's other columns on a live database — add it and seed
+-- from the site's original hardcoded value, same guard as above.
+alter table public.settings add column if not exists "officeHours" text not null default '';
+update public.settings set "officeHours" = 'শনিবার – বৃহস্পতিবার, সকাল ১০টা – বিকাল ৪টা'
+  where id = 1 and "officeHours" = '';
 
 alter table public.settings enable row level security;
 

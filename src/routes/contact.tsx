@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { MapPin, Phone, Mail, Clock, School } from "lucide-react";
 import { Layout, PageHeader, Panel } from "@/components/site/Layout";
 import { school } from "@/lib/site-data";
+import { useSettings } from "@/lib/queries/settings";
 import { useT } from "@/lib/i18n";
 
 const title = "যোগাযোগ | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
@@ -26,6 +27,7 @@ const field =
 
 function Contact() {
   const { tx, n } = useT();
+  const settings = useSettings();
   const [mapLoaded, setMapLoaded] = useState(false);
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,23 +46,25 @@ function Contact() {
           <ul className="space-y-4 text-sm text-muted-foreground">
             <li className="flex gap-3">
               <School className="mt-0.5 size-4 shrink-0 text-brand" />
-              <span className="font-medium text-foreground">{tx(school.name)}</span>
+              <span className="font-medium text-foreground">
+                {tx(settings["nameBn"] || school.name)}
+              </span>
             </li>
             <li className="flex gap-3">
               <MapPin className="mt-0.5 size-4 shrink-0 text-brand" />
-              {tx(school.address)}
+              {tx(settings["address"] || school.address)}
             </li>
             <li className="flex gap-3">
               <Phone className="mt-0.5 size-4 shrink-0 text-brand" />
-              {n(school.phone)}
+              {n(settings["phone"] || school.phone)}
             </li>
             <li className="flex gap-3">
               <Mail className="mt-0.5 size-4 shrink-0 text-brand" />
-              {school.email}
+              {settings["email"] || school.email}
             </li>
             <li className="flex gap-3">
               <Clock className="mt-0.5 size-4 shrink-0 text-brand" />
-              {tx(school.hours)}
+              {tx(settings["officeHours"] || school.hours)}
             </li>
           </ul>
           <div className="mt-5 overflow-hidden rounded-md border border-border">

@@ -14,6 +14,7 @@ const fields: { name: string; label: string; type?: "textarea"; full?: boolean }
   { name: "address", label: "ঠিকানা" },
   { name: "phone", label: "মোবাইল" },
   { name: "email", label: "ইমেইল" },
+  { name: "officeHours", label: "অফিস সময়সূচি (যোগাযোগ পেজে দেখাবে)" },
   { name: "eiin", label: "ইআইআইএন" },
   { name: "founded", label: "প্রতিষ্ঠার সাল" },
   { name: "motto", label: "প্রতিষ্ঠানের মূলমন্ত্র", full: true },
