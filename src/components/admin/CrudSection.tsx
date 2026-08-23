@@ -106,7 +106,16 @@ export function CrudSection({ config }: { config: SectionConfig }) {
         },
       );
     } else {
-      createRow.mutate(draft, {
+      // New rows join at the very end of the list — one past whatever the highest
+      // existing position is — rather than the DB default of 0, which would jump
+      // a freshly added teacher/committee member straight to the top.
+      const payload: Record<string, string | number> = config.orderable
+        ? {
+            ...draft,
+            sort_order: Math.max(0, ...rows.map((r) => Number(r["sort_order"]) || 0)) + 1,
+          }
+        : draft;
+      createRow.mutate(payload, {
         onSuccess: () => {
           toast.success("নতুন তথ্য যোগ করা হয়েছে");
           setShowForm(false);

@@ -146,7 +146,13 @@ export function useCreateRow(key: CollectionKey) {
   return useMutation({
     mutationFn: async (item: Record<string, string | number | boolean | null>) => {
       const supabase = getSupabaseBrowserClient();
-      const { data, error } = await supabase.from(key).insert(item).select().single();
+      let { data, error } = await supabase.from(key).insert(item).select().single();
+      // Same pending-migration case as fetchCollectionFn/useReorderRows: drop sort_order
+      // and retry rather than blocking the admin from adding the row at all.
+      if (error && "sort_order" in item && isMissingSortOrderColumn(error)) {
+        const { sort_order: _sortOrder, ...rest } = item;
+        ({ data, error } = await supabase.from(key).insert(rest).select().single());
+      }
       if (error) throw new Error(error.message);
       return data as Row;
     },
