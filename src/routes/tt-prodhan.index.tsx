@@ -12,7 +12,6 @@ function Dashboard() {
   const notices = useCollection("notices");
   const teachers = useCollection("teachers");
   const students = useCollection("students");
-  const admissions = useCollection("admissions");
   const routines = useCollection("routines");
   const posts = useCollection("posts");
   const media = useCollection("media");
@@ -21,7 +20,6 @@ function Dashboard() {
     { label: "নোটিশ", value: notices.length },
     { label: "শিক্ষক ও কর্মচারী", value: teachers.length },
     { label: "শিক্ষার্থী", value: students.length },
-    { label: "ভর্তি আবেদন", value: admissions.length },
     { label: "রুটিন", value: routines.length },
     { label: "পোস্ট ও সংবাদ", value: posts.length },
     { label: "মিডিয়া ফাইল", value: media.length },

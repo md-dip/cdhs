@@ -220,19 +220,6 @@ create table if not exists public.students (
   updated_at timestamptz not null default now()
 );
 
-create table if not exists public.admissions (
-  id uuid primary key default gen_random_uuid(),
-  name text not null default '',
-  "className" text not null default '',
-  session text not null default '',
-  guardian text not null default '',
-  phone text not null default '',
-  "applicationState" text not null default 'pending' check ("applicationState" in ('pending', 'approved', 'cancelled')),
-  status text not null default 'unpublished' check (status in ('published', 'unpublished')),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
 create table if not exists public.classes (
   id uuid primary key default gen_random_uuid(),
   name text not null default '',
@@ -240,7 +227,6 @@ create table if not exists public.classes (
   seats text not null default '',
   "group" text not null default '',
   rules text not null default '',
-  "admissionOpen" text not null default 'on' check ("admissionOpen" in ('on', 'off')),
   status text not null default 'published' check (status in ('published', 'unpublished')),
   boys text not null default '',
   girls text not null default '',
@@ -346,7 +332,7 @@ declare
 begin
   foreach t in array array[
     'notices', 'routines', 'teachers', 'committee', 'students',
-    'admissions', 'classes', 'books', 'results', 'posts', 'pages', 'gallery'
+    'classes', 'books', 'results', 'posts', 'pages', 'gallery'
   ]
   loop
     execute format('alter table public.%I enable row level security;', t);
@@ -591,7 +577,7 @@ declare
   t text;
 begin
   foreach t in array array[
-    'notices', 'routines', 'teachers', 'committee', 'students', 'admissions',
+    'notices', 'routines', 'teachers', 'committee', 'students',
     'classes', 'books', 'results', 'posts', 'pages', 'gallery', 'settings'
   ]
   loop

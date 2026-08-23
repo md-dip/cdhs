@@ -17,7 +17,6 @@ const COLLECTION_KEYS = [
   "routines",
   "gallery",
   "students",
-  "admissions",
   "classes",
   "books",
   "results",

@@ -109,44 +109,17 @@ export const sections: SectionConfig[] = [
     ],
   },
   {
-    key: "admissions",
-    slug: "admissions",
-    title: "ভর্তি আবেদন",
-    subtitle: "অনলাইন ভর্তি আবেদন অনুমোদন, বাতিল বা মুছে ফেলুন।",
-    columns: [
-      { name: "name", label: "আবেদনকারী" },
-      { name: "className", label: "শ্রেণি" },
-      { name: "session", label: "শিক্ষাবর্ষ" },
-      { name: "applicationState", label: "অবস্থা" },
-    ],
-    fields: [
-      { name: "name", label: "আবেদনকারীর নাম" },
-      { name: "className", label: "শ্রেণি" },
-      { name: "session", label: "শিক্ষাবর্ষ" },
-      { name: "guardian", label: "অভিভাবকের নাম" },
-      { name: "phone", label: "মোবাইল" },
-      {
-        name: "applicationState",
-        label: "আবেদনের অবস্থা",
-        type: "select",
-        options: ["pending", "approved", "cancelled"],
-      },
-      statusField,
-    ],
-  },
-  {
     key: "classes",
     slug: "classes",
     title: "শ্রেণি ও আসন",
     subtitle:
-      "শ্রেণি যোগ করুন, আসন সংখ্যা ও ভর্তি আবেদন চালু/বন্ধ করুন। তালিকায় টেনে (ড্র্যাগ) ক্রম পরিবর্তন করা যাবে।",
+      "শ্রেণি যোগ করুন ও আসন সংখ্যা ঠিক করুন। তালিকায় টেনে (ড্র্যাগ) ক্রম পরিবর্তন করা যাবে।",
     orderable: true,
     columns: [
       { name: "name", label: "শ্রেণি" },
       { name: "seats", label: "আসন" },
       { name: "boys", label: "ছাত্র সংখ্যা" },
       { name: "girls", label: "ছাত্রী সংখ্যা" },
-      { name: "admissionOpen", label: "ভর্তি আবেদন" },
     ],
     fields: [
       { name: "name", label: "শ্রেণির নাম" },
@@ -156,7 +129,6 @@ export const sections: SectionConfig[] = [
       { name: "girls", label: "বর্তমান ছাত্রী সংখ্যা" },
       { name: "group", label: "বিভাগসমূহ" },
       { name: "rules", label: "বিষয় নির্বাচনের নিয়ম", type: "textarea", full: true },
-      { name: "admissionOpen", label: "ভর্তি আবেদন", type: "select", options: ["on", "off"] },
       statusField,
     ],
   },
