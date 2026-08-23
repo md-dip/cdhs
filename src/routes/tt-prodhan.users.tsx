@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { UserPlus } from "lucide-react";
+import { Trash2, UserPlus } from "lucide-react";
 import { AdminCard } from "@/components/admin/AdminShell";
 import { useProfiles, useUpdateProfile } from "@/lib/queries/profiles";
-import { inviteAdminFn } from "@/lib/server-fns/users";
+import { inviteAdminFn, removeAdminFn } from "@/lib/server-fns/users";
 
 export const Route = createFileRoute("/tt-prodhan/users")({
   component: UsersPage,
@@ -16,6 +17,15 @@ function UsersPage() {
   const { session } = Route.useRouteContext();
   const profiles = useProfiles();
   const updateProfile = useUpdateProfile();
+  const queryClient = useQueryClient();
+  const removeAdmin = useMutation({
+    mutationFn: (id: string) => removeAdminFn({ data: { id } }),
+    onSuccess: () => {
+      toast.success("অ্যাডমিন মুছে ফেলা হয়েছে");
+      queryClient.invalidateQueries({ queryKey: ["profiles"] });
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "মুছে ফেলা ব্যর্থ হয়েছে"),
+  });
   const isSuperAdmin = session.profile.role === "super-admin";
 
   const [name, setName] = useState("");
@@ -96,6 +106,7 @@ function UsersPage() {
                 <th className="px-3 py-2 text-left font-semibold">ইমেইল</th>
                 <th className="px-3 py-2 text-left font-semibold">অনুমতি</th>
                 <th className="px-3 py-2 text-left font-semibold">সক্রিয়</th>
+                <th className="px-3 py-2 text-right font-semibold">অ্যাকশন</th>
               </tr>
             </thead>
             <tbody>
@@ -157,6 +168,25 @@ function UsersPage() {
                       ) : (
                         <span>{p.active ? "সক্রিয়" : "নিষ্ক্রিয়"}</span>
                       )}
+                    </td>
+                    <td className="px-3 py-2 text-right">
+                      {canEdit ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (
+                              window.confirm(`${p.name} (${p.email}) কে স্থায়ীভাবে মুছে ফেলবেন?`)
+                            ) {
+                              removeAdmin.mutate(p.id);
+                            }
+                          }}
+                          disabled={removeAdmin.isPending}
+                          className="rounded-md border border-input p-1.5 text-destructive hover:bg-destructive/10 disabled:opacity-60"
+                          aria-label="মুছে ফেলুন"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      ) : null}
                     </td>
                   </tr>
                 );

@@ -27,3 +27,26 @@ export const inviteAdminFn = createServerFn({ method: "POST" })
     });
     if (error) throw new Error(error.message);
   });
+
+/**
+ * Permanently removes an admin: deletes their Supabase Auth account, which
+ * cascades to delete their profiles row too (profiles.id references
+ * auth.users.id on delete cascade). Unlike deactivating (active = false, an
+ * RLS-level toggle any super-admin can already do directly from the browser),
+ * this needs the Admin API — hence a server function, not a client-side call.
+ */
+export const removeAdminFn = createServerFn({ method: "POST" })
+  .validator(z.object({ id: z.string().uuid() }))
+  .handler(async ({ data }) => {
+    const session = await getServerSession();
+    if (!session || session.profile.role !== "super-admin") {
+      throw new Error("এই কাজটি করার অনুমতি শুধু সুপার অ্যাডমিনের রয়েছে");
+    }
+    if (data.id === session.user.id) {
+      throw new Error("নিজেকে মুছে ফেলা যাবে না");
+    }
+
+    const supabaseAdmin = getSupabaseAdminClient();
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(data.id);
+    if (error) throw new Error(error.message);
+  });
