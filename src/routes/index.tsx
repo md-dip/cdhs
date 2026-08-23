@@ -1,0 +1,373 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Bell,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  CalendarDays,
+  UserCog,
+  GraduationCap,
+  Images,
+  Building2,
+  Phone,
+  User,
+  MessageSquare,
+} from "lucide-react";
+import { Layout, Panel } from "@/components/site/Layout";
+import { school, slides, stats, results, images } from "@/lib/site-data";
+import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
+import { useT } from "@/lib/i18n";
+
+const title = "ছাতনী ঢেকড়া উচ্চ বিদ্যালয় — প্রচ্ছদ";
+const description =
+  "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়, আদমদীঘি, বগুড়ার অফিসিয়াল ওয়েবসাইট। নোটিশ, রুটিন, ফলাফল, ভর্তি ও শিক্ষকমণ্ডলীর তথ্য।";
+
+const HOME_COLLECTIONS = ["notices", "students", "classes", "teachers"] as const;
+
+export const Route = createFileRoute("/")({
+  loader: ({ context }) =>
+    Promise.all(
+      HOME_COLLECTIONS.map((key) =>
+        context.queryClient.ensureQueryData(collectionQueryOptions(key, { onlyPublished: true })),
+      ),
+    ),
+  head: () => ({
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+    ],
+  }),
+  component: Index,
+});
+
+const quickLinks = [
+  { to: "/notices", label: "নোটিশ বোর্ড", labelEn: "Notice board", Icon: FileText },
+  { to: "/routine", label: "শ্রেণি রুটিন", labelEn: "Class routine", Icon: CalendarDays },
+  { to: "/committee", label: "পরিচালনা পর্ষদ", labelEn: "Committee", Icon: UserCog },
+  { to: "/academics", label: "একাডেমিক তথ্য", labelEn: "Academics", Icon: GraduationCap },
+  { to: "/gallery", label: "ছবির গ্যালারি", labelEn: "Gallery", Icon: Images },
+  { to: "/about", label: "প্রতিষ্ঠান পরিচিতি", labelEn: "About school", Icon: Building2 },
+  { to: "/contact", label: "যোগাযোগ", labelEn: "Contact", Icon: MessageSquare },
+] as const;
+
+function Index() {
+  const [i, setI] = useState(0);
+  const { t, n, tx } = useT();
+  const notices = usePublished("notices");
+  useEffect(() => {
+    const tm = setInterval(() => setI((p) => (p + 1) % slides.length), 5000);
+    return () => clearInterval(tm);
+  }, []);
+
+  return (
+    <Layout>
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="relative overflow-hidden rounded-lg shadow-[var(--shadow-raise)]">
+          {slides.map((s, idx) => (
+            <img
+              key={s.caption}
+              src={s.src}
+              alt={s.caption}
+              className={`h-[280px] w-full object-cover md:h-[420px] ${idx === i ? "block" : "hidden"}`}
+            />
+          ))}
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-deep/80 to-transparent px-6 py-5">
+            <p className="text-lg font-medium text-brand-foreground">
+              {tx(slides[i]?.caption ?? "")}
+            </p>
+          </div>
+          <button
+            aria-label={t("আগের ছবি", "Previous slide")}
+            onClick={() => setI((p) => (p - 1 + slides.length) % slides.length)}
+            className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-brand-deep/60 p-2 text-brand-foreground hover:bg-brand-deep"
+          >
+            <ChevronLeft className="size-5" />
+          </button>
+          <button
+            aria-label={t("পরের ছবি", "Next slide")}
+            onClick={() => setI((p) => (p + 1) % slides.length)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-brand-deep/60 p-2 text-brand-foreground hover:bg-brand-deep"
+          >
+            <ChevronRight className="size-5" />
+          </button>
+        </div>
+
+        <div className="mt-6 flex overflow-hidden rounded-lg border border-border bg-surface">
+          <div className="flex shrink-0 items-center gap-2 bg-maroon px-4 py-3 text-sm font-semibold text-brand-foreground">
+            <Bell className="size-4" /> {t("সর্বশেষ নোটিশ", "Latest notices")}
+          </div>
+          <div className="flex flex-1 items-center overflow-hidden">
+            <div className="flex w-max animate-marquee gap-10 whitespace-nowrap px-6 text-sm">
+              {[...notices.slice(0, 4), ...notices.slice(0, 4)].map((nt, idx) => (
+                <Link
+                  key={`${String(nt["slug"])}-${idx}`}
+                  to="/notices/$slug"
+                  params={{ slug: String(nt["slug"]) }}
+                  className="text-foreground hover:text-brand"
+                >
+                  ◆ {tx(String(nt["title"]))}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_380px]">
+          <div className="space-y-6">
+            <Panel title={t("এক নজরে বিদ্যালয়", "School at a glance")}>
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                {stats.map((s) => (
+                  <div key={s.label} className="rounded-md bg-secondary/70 px-4 py-5 text-center">
+                    <div className="text-2xl font-bold text-brand-deep">{n(s.value)}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      {t(s.label, s.labelEn)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-5 text-sm leading-7 text-muted-foreground">
+                {t(
+                  "১৯৬৯ সালে প্রতিষ্ঠিত এই বিদ্যালয়টি বগুড়া জেলার আদমদীঘি উপজেলার ছাতনী ঢেকড়া এলাকায় অবস্থিত। ষষ্ঠ থেকে দশম শ্রেণি পর্যন্ত বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখায় পাঠদান করা হয়। ডিজিটাল বাংলাদেশ গড়ার লক্ষ্যে বিদ্যালয়ের সকল তথ্য এই ওয়েবসাইটে নিয়মিত হালনাগাদ করা হয়।",
+                  "Established in 1969, the school is located at Chhatni Dekhra in Adamdighi upazila of Bogura district. Classes six to ten are taught in the science, humanities and business studies streams. All school information is regularly updated on this website.",
+                )}
+              </p>
+            </Panel>
+
+            <Panel title={t("প্রধান শিক্ষকের বাণী", "Message from the Headmaster")}>
+              <div className="flex flex-col gap-6 md:flex-row">
+                <div className="shrink-0 text-center">
+                  <img
+                    src={images.headmaster}
+                    alt={t("মো. মাহবুবুর রহমান", "Md. Mahbubur Rahman")}
+                    className="mx-auto size-36 rounded-md border-2 border-gold object-cover"
+                  />
+                  <p className="mt-3 font-semibold text-brand-deep">
+                    {t("মো. মাহবুবুর রহমান", "Md. Mahbubur Rahman")}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {t("প্রধান শিক্ষক", "Headmaster")}
+                  </p>
+                </div>
+                <blockquote className="border-s-4 border-gold ps-5 text-sm leading-7 text-muted-foreground">
+                  {t(
+                    "প্রিয় শিক্ষার্থী ও অভিভাবকবৃন্দ, ছাতনী ঢেকড়া উচ্চ বিদ্যালয়ের ওয়েবসাইটে আপনাদের স্বাগত জানাই। ১৯৬৯ সাল থেকে এই প্রতিষ্ঠান আদমদীঘি ও বগুড়া অঞ্চলে শিক্ষা বিস্তারে নিরলসভাবে কাজ করে যাচ্ছে। মানসম্মত শিক্ষা, নৈতিক মূল্যবোধ ও ডিজিটাল দক্ষতা—এই তিনটি স্তম্ভের উপর দাঁড়িয়ে আমরা শিক্ষার্থীদের ভবিষ্যতের জন্য প্রস্তুত করছি।",
+                    "Dear students and guardians, welcome to the website of Chhatni Dekhra High School. Since 1969 this institution has worked tirelessly to spread education across Adamdighi and Bogura. Quality education, moral values and digital skills are the three pillars on which we prepare our students for the future.",
+                  )}
+                </blockquote>
+              </div>
+            </Panel>
+
+            <Panel title={t("পাবলিক পরীক্ষার ফলাফল", "Public exam results")}>
+              <ResultsTable />
+            </Panel>
+          </div>
+
+          <aside className="space-y-6">
+            <Panel title={t("নোটিশ বোর্ড", "Notice board")}>
+              <ul className="-mt-2 divide-y divide-border">
+                {notices.map((nt) => (
+                  <li key={nt.id} className="py-3">
+                    <Link
+                      to="/notices/$slug"
+                      params={{ slug: String(nt["slug"]) }}
+                      className="text-sm font-medium text-foreground hover:text-brand"
+                    >
+                      {tx(String(nt["title"]))}
+                    </Link>
+                    <p className="mt-1 text-xs text-muted-foreground">{tx(String(nt["date"]))}</p>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                to="/notices"
+                className="mt-4 block rounded-md bg-brand px-4 py-2.5 text-center text-sm font-medium text-brand-foreground hover:bg-brand-deep"
+              >
+                {t("সকল নোটিশ", "All notices")}
+              </Link>
+            </Panel>
+
+            <Panel title={t("প্রয়োজনীয় লিংক", "Useful links")}>
+              <div className="grid grid-cols-2 gap-3">
+                {quickLinks.map(({ to, label, labelEn, Icon }) => (
+                  <Link
+                    key={to}
+                    to={to}
+                    className="flex flex-col items-center gap-2 rounded-md bg-secondary/70 px-3 py-5 text-center text-xs text-secondary-foreground hover:bg-secondary"
+                  >
+                    <Icon className="size-5 text-brand" />
+                    {t(label, labelEn)}
+                  </Link>
+                ))}
+              </div>
+            </Panel>
+
+            <Panel title={t("প্রতিষ্ঠানের তথ্য", "Institution info")}>
+              <dl className="-mt-2 divide-y divide-border text-sm">
+                {[
+                  [t("ইআইআইএন", "EIIN"), school.eiin],
+                  [t("স্কুল কোড", "School code"), school.code],
+                  [t("স্থাপিত", "Established"), school.founded],
+                  [t("বোর্ড", "Board"), t(school.board, "Rajshahi")],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex justify-between py-2.5">
+                    <dt className="text-muted-foreground">{k}</dt>
+                    <dd className="font-medium">{n(String(v))}</dd>
+                  </div>
+                ))}
+              </dl>
+            </Panel>
+          </aside>
+        </div>
+
+        <div className="mt-6 space-y-6">
+          <StudentsPanel />
+          <TeachersPanel />
+        </div>
+      </div>
+    </Layout>
+  );
+}
+
+function ResultsTable() {
+  const { t, n } = useT();
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-border text-start text-muted-foreground">
+            {[
+              t("সন", "Year"),
+              t("পরীক্ষা", "Exam"),
+              t("অংশগ্রহণ", "Appeared"),
+              t("উত্তীর্ণ", "Passed"),
+              t("জিপিএ-৫", "GPA-5"),
+            ].map((h) => (
+              <th key={h} className="px-3 py-2.5 text-start font-medium">
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {results.map((r) => (
+            <tr key={r.year} className="border-b border-border/70 last:border-0">
+              <td className="px-3 py-2.5">{n(r.year)}</td>
+              <td className="px-3 py-2.5">{t(r.exam, "SSC")}</td>
+              <td className="px-3 py-2.5">{n(r.appeared)}</td>
+              <td className="px-3 py-2.5">{n(r.passed)}</td>
+              <td className="px-3 py-2.5">{n(r.gpa5)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function StudentsPanel() {
+  const { t, n, tx } = useT();
+  const students = usePublished("students");
+  const classes = usePublished("classes");
+
+  const rows = useMemo(() => {
+    const order = classes.map((c) => String(c["name"]));
+    const names = Array.from(
+      new Set([...order, ...students.map((s) => String(s["className"] ?? ""))].filter(Boolean)),
+    );
+    return names.map((name) => {
+      const inClass = students.filter((s) => String(s["className"]) === name);
+      const boys = inClass.filter((s) => String(s["gender"]) === "ছাত্র").length;
+      const girls = inClass.filter((s) => String(s["gender"]) === "ছাত্রী").length;
+      return { name, boys, girls, total: inClass.length };
+    });
+  }, [students, classes]);
+
+  const totals = rows.reduce(
+    (acc, r) => ({
+      boys: acc.boys + r.boys,
+      girls: acc.girls + r.girls,
+      total: acc.total + r.total,
+    }),
+    { boys: 0, girls: 0, total: 0 },
+  );
+
+  if (!students.length) return null;
+
+  return (
+    <Panel title={t("শ্রেণি ও লিঙ্গ অনুযায়ী শিক্ষার্থী", "Students by class and gender")}>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border text-muted-foreground">
+              {[
+                t("শ্রেণি", "Class"),
+                t("ছাত্র", "Boys"),
+                t("ছাত্রী", "Girls"),
+                t("মোট", "Total"),
+              ].map((h) => (
+                <th key={h} className="px-3 py-2.5 text-start font-medium">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.name} className="border-b border-border/70">
+                <td className="px-3 py-2.5">{tx(r.name)}</td>
+                <td className="px-3 py-2.5">{n(r.boys)}</td>
+                <td className="px-3 py-2.5">{n(r.girls)}</td>
+                <td className="px-3 py-2.5 font-medium">{n(r.total)}</td>
+              </tr>
+            ))}
+            <tr className="bg-secondary/60 font-semibold text-brand-deep">
+              <td className="px-3 py-2.5">{t("সর্বমোট", "Grand total")}</td>
+              <td className="px-3 py-2.5">{n(totals.boys)}</td>
+              <td className="px-3 py-2.5">{n(totals.girls)}</td>
+              <td className="px-3 py-2.5">{n(totals.total)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </Panel>
+  );
+}
+
+function TeachersPanel() {
+  const { t, n, tx } = useT();
+  const teachers = usePublished("teachers");
+  return (
+    <Panel title={t("শিক্ষকমণ্ডলী ও কর্মচারী", "Teachers & staff")}>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {teachers.map((tc) => (
+          <article key={tc.id} className="surface-card p-5 text-center">
+            {tc["photo"] ? (
+              <img
+                src={String(tc["photo"])}
+                alt={String(tc["name"])}
+                className="mx-auto size-20 rounded-full border-2 border-gold object-cover"
+              />
+            ) : (
+              <div className="mx-auto flex size-20 items-center justify-center rounded-full bg-secondary">
+                <User className="size-8 text-brand/70" />
+              </div>
+            )}
+            <h3 className="mt-3 text-sm font-bold text-brand-deep">{tx(String(tc["name"]))}</h3>
+            <p className="mt-1 text-xs text-brand">{tx(String(tc["role"]))}</p>
+            {tc["subject"] ? (
+              <p className="mt-1 text-xs text-muted-foreground">{tx(String(tc["subject"]))}</p>
+            ) : null}
+            {tc["phone"] ? (
+              <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Phone className="size-3.5" /> {n(String(tc["phone"]))}
+              </p>
+            ) : null}
+          </article>
+        ))}
+      </div>
+    </Panel>
+  );
+}

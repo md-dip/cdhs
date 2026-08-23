@@ -1,0 +1,68 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
+import { AdminCard } from "@/components/admin/AdminShell";
+import { useSettings, useUpdateSettings } from "@/lib/queries/settings";
+
+export const Route = createFileRoute("/tt-prodhan/settings")({
+  component: SettingsPage,
+});
+
+const fields: { name: string; label: string }[] = [
+  { name: "nameBn", label: "প্রতিষ্ঠানের নাম (বাংলা)" },
+  { name: "nameEn", label: "প্রতিষ্ঠানের নাম (ইংরেজি)" },
+  { name: "address", label: "ঠিকানা" },
+  { name: "phone", label: "মোবাইল" },
+  { name: "email", label: "ইমেইল" },
+  { name: "eiin", label: "ইআইআইএন" },
+  { name: "headName", label: "প্রধান শিক্ষকের নাম" },
+  { name: "headTitle", label: "প্রধান শিক্ষকের পদবি" },
+];
+
+function SettingsPage() {
+  const settings = useSettings();
+  const updateSettings = useUpdateSettings();
+  const [draft, setDraft] = useState<Record<string, string>>({ ...settings });
+
+  return (
+    <div className="space-y-5">
+      <div>
+        <h1 className="font-display text-2xl font-bold text-brand-deep">সাধারণ সেটিংস</h1>
+        <p className="text-sm text-muted-foreground">
+          প্রতিষ্ঠানের নাম, ঠিকানা, যোগাযোগ ও প্রধান শিক্ষকের তথ্য এখান থেকে পরিবর্তন করুন।
+        </p>
+      </div>
+      <AdminCard title="প্রতিষ্ঠানের তথ্য">
+        <form
+          className="grid gap-4 md:grid-cols-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            updateSettings.mutate(draft, {
+              onSuccess: () => toast.success("সেটিংস সংরক্ষিত হয়েছে"),
+              onError: (err) => toast.error(err.message || "সংরক্ষণ ব্যর্থ হয়েছে"),
+            });
+          }}
+        >
+          {fields.map((f) => (
+            <div key={f.name}>
+              <label className="mb-1 block text-sm font-medium" htmlFor={f.name}>
+                {f.label}
+              </label>
+              <input
+                id={f.name}
+                value={draft[f.name] ?? ""}
+                onChange={(e) => setDraft({ ...draft, [f.name]: e.target.value })}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              />
+            </div>
+          ))}
+          <div className="md:col-span-2">
+            <button className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+              সংরক্ষণ করুন
+            </button>
+          </div>
+        </form>
+      </AdminCard>
+    </div>
+  );
+}
