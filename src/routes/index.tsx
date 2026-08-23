@@ -206,7 +206,7 @@ function Index() {
                 {[
                   [t("ইআইআইএন", "EIIN"), school.eiin],
                   [t("স্কুল কোড", "School code"), school.code],
-                  [t("স্থাপিত", "Established"), school.founded],
+                  [t("স্থাপিত", "Established"), settings["founded"] || school.founded],
                   [t("বোর্ড", "Board"), t(school.board, "Rajshahi")],
                 ].map(([k, v]) => (
                   <div key={k} className="flex justify-between py-2.5">

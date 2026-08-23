@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Layout, PageHeader, Panel } from "@/components/site/Layout";
 import { school, images, facilities } from "@/lib/site-data";
+import { useSettings } from "@/lib/queries/settings";
 import { useT } from "@/lib/i18n";
 
 const title = "প্রতিষ্ঠান পরিচিতি | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
@@ -21,6 +22,8 @@ export const Route = createFileRoute("/about")({
 
 function About() {
   const { tx, n } = useT();
+  const settings = useSettings();
+  const founded = settings["founded"] || school.founded;
   return (
     <Layout>
       <PageHeader title={tx("প্রতিষ্ঠান পরিচিতি")} subtitle={tx(school.address)} />
@@ -63,7 +66,7 @@ function About() {
                 [tx("ঠিকানা"), tx(school.address)],
                 [tx("ইআইআইএন"), n(school.eiin)],
                 [tx("স্কুল কোড"), n(school.code)],
-                [tx("স্থাপিত"), n(school.founded)],
+                [tx("স্থাপিত"), n(founded)],
                 [tx("শিক্ষা বোর্ড"), tx(school.board)],
                 [tx("শিফট"), tx(school.shift)],
               ].map(([k, v]) => (

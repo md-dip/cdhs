@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { MapPin, Phone, Languages, Menu, X } from "lucide-react";
-import { navItems, images } from "@/lib/site-data";
+import { navItems, images, school as staticSchool } from "@/lib/site-data";
 import { useSettings } from "@/lib/queries/settings";
 import { useT, toggleLang } from "@/lib/i18n";
 
@@ -15,7 +15,7 @@ export function Header() {
     address: settings["address"] ?? "",
     phone: settings["phone"] ?? "",
     eiin: settings["eiin"] ?? "",
-    founded: "১৯৬৯",
+    founded: settings["founded"] || staticSchool.founded,
   };
   const addressEn = "Chhatni Dekhra, Adamdighi, Bogura";
 

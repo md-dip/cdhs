@@ -305,6 +305,7 @@ create table if not exists public.settings (
   "headPhoto" text not null default '',
   "headMessage" text not null default '',
   motto text not null default '',
+  founded text not null default '',
   updated_at timestamptz not null default now()
 );
 
