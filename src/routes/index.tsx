@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Layout, Panel } from "@/components/site/Layout";
 import { TeacherCard } from "@/components/site/TeacherCard";
-import { StudentsByClassPanel } from "@/components/site/StudentsByClassTable";
+import { StudentsByClassPanel, useStudentTotal } from "@/components/site/StudentsByClassTable";
 import { school, slides, stats, images } from "@/lib/site-data";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
 import { useSettings } from "@/lib/queries/settings";
@@ -66,6 +66,13 @@ function Index() {
   const settings = useSettings();
   const notices = usePublished("notices");
   const gallery = usePublished("gallery");
+  const teachers = usePublished("teachers");
+  const studentTotal = useStudentTotal();
+  const glanceStats = [
+    { label: "শিক্ষার্থী", labelEn: "Students", value: studentTotal },
+    { label: "শিক্ষক ও কর্মচারী", labelEn: "Teachers & Staff", value: teachers.length },
+    ...stats,
+  ];
   const heroSlides = useMemo(() => {
     const marked = gallery.filter((g) => g["showOnHome"] === "on");
     return marked.length > 0
@@ -137,7 +144,7 @@ function Index() {
           <div className="space-y-6">
             <Panel title={t("এক নজরে বিদ্যালয়", "School at a glance")}>
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                {stats.map((s) => (
+                {glanceStats.map((s) => (
                   <div key={s.label} className="rounded-md bg-secondary/70 px-4 py-5 text-center">
                     <div className="text-2xl font-bold text-brand-deep">{n(s.value)}</div>
                     <div className="mt-1 text-xs text-muted-foreground">

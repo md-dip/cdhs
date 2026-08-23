@@ -38,9 +38,8 @@ export const slides = [
   { src: assembly, caption: "প্রাত্যহিক সমাবেশ" },
 ];
 
+// শিক্ষার্থী ও শিক্ষক-কর্মচারী এখন যথাক্রমে classes ও teachers থেকে হিসাব করা হয় (দেখুন index.tsx)।
 export const stats = [
-  { value: "৮৪২", label: "শিক্ষার্থী", labelEn: "Students" },
-  { value: "২৭", label: "শিক্ষক ও কর্মচারী", labelEn: "Teachers & Staff" },
   { value: "১৮", label: "শ্রেণিকক্ষ", labelEn: "Classrooms" },
   { value: "৯৭", label: "পাসের হার (%)", labelEn: "Pass rate (%)" },
 ];

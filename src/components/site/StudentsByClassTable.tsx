@@ -9,11 +9,9 @@ function toCount(value: unknown) {
 /**
  * Reads the boys/girls headcount typed directly onto each class (শ্রেণি ও আসন), rather than
  * counting individual student records — there's no per-student admin page anymore, so a
- * per-class count is the only thing an admin can realistically keep up to date. Renders
- * nothing (including its own Panel) until at least one class has a non-zero headcount.
+ * per-class count is the only thing an admin can realistically keep up to date.
  */
-export function StudentsByClassPanel({ title }: { title: string }) {
-  const { t, n, tx } = useT();
+function useClassBreakdown() {
   const classes = usePublished("classes");
 
   const rows = classes.map((c) => {
@@ -30,6 +28,19 @@ export function StudentsByClassPanel({ title }: { title: string }) {
     }),
     { boys: 0, girls: 0, total: 0 },
   );
+
+  return { rows, totals };
+}
+
+/** The school-wide student total — e.g. for the homepage's "এক নজরে বিদ্যালয়" stat tiles. */
+export function useStudentTotal() {
+  return useClassBreakdown().totals.total;
+}
+
+/** Renders nothing (including its own Panel) until at least one class has a non-zero headcount. */
+export function StudentsByClassPanel({ title }: { title: string }) {
+  const { t, n, tx } = useT();
+  const { rows, totals } = useClassBreakdown();
 
   if (!totals.total) return null;
 
