@@ -99,65 +99,68 @@ function UsersPage() {
               </tr>
             </thead>
             <tbody>
-              {profiles.map((p) => (
-                <tr key={p.id} className="border-b border-border last:border-0">
-                  <td className="px-3 py-2">{p.name}</td>
-                  <td className="px-3 py-2">{p.email}</td>
-                  <td className="px-3 py-2">
-                    {isSuperAdmin ? (
-                      <select
-                        value={p.role}
-                        onChange={(e) =>
-                          updateProfile.mutate(
-                            {
-                              id: p.id,
-                              patch: { role: e.target.value as (typeof ROLE_OPTIONS)[number] },
-                            },
-                            {
-                              onError: (err) =>
-                                toast.error(err.message || "হালনাগাদ ব্যর্থ হয়েছে"),
-                            },
-                          )
-                        }
-                        className="rounded-md border border-input bg-background px-2 py-1 text-xs"
-                      >
-                        {ROLE_OPTIONS.map((r) => (
-                          <option key={r} value={r}>
-                            {r}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      p.role
-                    )}
-                  </td>
-                  <td className="px-3 py-2">
-                    {isSuperAdmin ? (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          updateProfile.mutate(
-                            { id: p.id, patch: { active: !p.active } },
-                            {
-                              onError: (err) =>
-                                toast.error(err.message || "হালনাগাদ ব্যর্থ হয়েছে"),
-                            },
-                          )
-                        }
-                        className={`rounded-full px-2 py-0.5 text-xs ${
-                          p.active
-                            ? "bg-secondary text-secondary-foreground"
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {p.active ? "সক্রিয়" : "নিষ্ক্রিয়"}
-                      </button>
-                    ) : (
-                      <span>{p.active ? "সক্রিয়" : "নিষ্ক্রিয়"}</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              {profiles.map((p) => {
+                const canEdit = isSuperAdmin && p.id !== session.user.id;
+                return (
+                  <tr key={p.id} className="border-b border-border last:border-0">
+                    <td className="px-3 py-2">{p.name}</td>
+                    <td className="px-3 py-2">{p.email}</td>
+                    <td className="px-3 py-2">
+                      {canEdit ? (
+                        <select
+                          value={p.role}
+                          onChange={(e) =>
+                            updateProfile.mutate(
+                              {
+                                id: p.id,
+                                patch: { role: e.target.value as (typeof ROLE_OPTIONS)[number] },
+                              },
+                              {
+                                onError: (err) =>
+                                  toast.error(err.message || "হালনাগাদ ব্যর্থ হয়েছে"),
+                              },
+                            )
+                          }
+                          className="rounded-md border border-input bg-background px-2 py-1 text-xs"
+                        >
+                          {ROLE_OPTIONS.map((r) => (
+                            <option key={r} value={r}>
+                              {r}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        p.role
+                      )}
+                    </td>
+                    <td className="px-3 py-2">
+                      {canEdit ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateProfile.mutate(
+                              { id: p.id, patch: { active: !p.active } },
+                              {
+                                onError: (err) =>
+                                  toast.error(err.message || "হালনাগাদ ব্যর্থ হয়েছে"),
+                              },
+                            )
+                          }
+                          className={`rounded-full px-2 py-0.5 text-xs ${
+                            p.active
+                              ? "bg-secondary text-secondary-foreground"
+                              : "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          {p.active ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                        </button>
+                      ) : (
+                        <span>{p.active ? "সক্রিয়" : "নিষ্ক্রিয়"}</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

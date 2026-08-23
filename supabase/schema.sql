@@ -88,10 +88,13 @@ as $$
   );
 $$;
 
+-- id <> auth.uid() blocks a super-admin from changing their OWN row through
+-- this policy — otherwise they can demote or deactivate themselves and get
+-- locked out with nobody left who can undo it.
 create policy "profiles: super-admins update" on public.profiles
   for update to authenticated
-  using (public.is_super_admin())
-  with check (public.is_super_admin());
+  using (public.is_super_admin() and id <> auth.uid())
+  with check (public.is_super_admin() and id <> auth.uid());
 
 -- New Supabase Auth sign-ups get a profile row automatically. New admins start INACTIVE
 -- (active = false) on purpose — see the bootstrap note at the bottom of this file.
