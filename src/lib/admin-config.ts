@@ -3,7 +3,7 @@ import type { CollectionKey } from "./queries/collections";
 export type Field = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "date" | "select" | "password";
+  type?: "text" | "textarea" | "date" | "select" | "password" | "number";
   options?: string[];
   full?: boolean;
 };
@@ -15,6 +15,8 @@ export type SectionConfig = {
   subtitle: string;
   columns: { name: string; label: string }[];
   fields: Field[];
+  /** Rows can be drag-reordered in the admin list; the resulting order drives the public site too. */
+  orderable?: boolean;
 };
 
 const statusField: Field = {
@@ -71,13 +73,16 @@ export const sections: SectionConfig[] = [
     key: "teachers",
     slug: "teachers",
     title: "শিক্ষকমণ্ডলী",
-    subtitle: "নতুন শিক্ষক যোগ করুন, তথ্য সম্পাদনা ও প্রকাশনা নিয়ন্ত্রণ করুন।",
+    subtitle:
+      "নতুন শিক্ষক যোগ করুন, তথ্য সম্পাদনা ও প্রকাশনা নিয়ন্ত্রণ করুন। তালিকায় টেনে (ড্র্যাগ) ক্রম পরিবর্তন করা যাবে।",
+    orderable: true,
     columns: [
       { name: "name", label: "নাম" },
       { name: "role", label: "পদবি" },
       { name: "subject", label: "বিষয়" },
     ],
     fields: [
+      { name: "sort_order", label: "ক্রম নং (সিরিয়াল)", type: "number" },
       { name: "name", label: "নাম" },
       { name: "role", label: "পদবি" },
       { name: "subject", label: "বিষয়" },
@@ -90,14 +95,15 @@ export const sections: SectionConfig[] = [
     key: "committee",
     slug: "committee",
     title: "পরিচালনা পর্ষদ",
-    subtitle: "পর্ষদের সদস্য যোগ, সম্পাদনা ও প্রকাশনা নিয়ন্ত্রণ করুন।",
+    subtitle:
+      "পর্ষদের সদস্য যোগ, সম্পাদনা ও প্রকাশনা নিয়ন্ত্রণ করুন। তালিকায় টেনে (ড্র্যাগ) ক্রম পরিবর্তন করা যাবে।",
+    orderable: true,
     columns: [
-      { name: "serial", label: "ক্রম" },
       { name: "name", label: "নাম" },
       { name: "designation", label: "পদবি" },
     ],
     fields: [
-      { name: "serial", label: "ক্রমিক নং" },
+      { name: "sort_order", label: "ক্রম নং (সিরিয়াল)", type: "number" },
       { name: "name", label: "নাম" },
       { name: "designation", label: "পদবি" },
       { name: "phone", label: "মোবাইল" },

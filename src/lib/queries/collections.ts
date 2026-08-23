@@ -27,11 +27,16 @@ const COLLECTION_KEYS = [
 
 export type CollectionKey = (typeof COLLECTION_KEYS)[number];
 
+/** Collections with an admin-driven drag-and-drop display order (see `sort_order` column). */
+export const ORDERABLE_COLLECTIONS = new Set<CollectionKey>(["teachers", "committee"]);
+
 const fetchCollectionFn = createServerFn({ method: "GET" })
   .validator(z.object({ key: z.enum(COLLECTION_KEYS), onlyPublished: z.boolean().optional() }))
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient();
-    let query = supabase.from(data.key).select("*").order("created_at", { ascending: false });
+    let query = ORDERABLE_COLLECTIONS.has(data.key)
+      ? supabase.from(data.key).select("*").order("sort_order", { ascending: true })
+      : supabase.from(data.key).select("*").order("created_at", { ascending: false });
     if (data.onlyPublished) query = query.eq("status", "published");
     const { data: rows, error } = await query;
     if (error) throw new Error(error.message);
@@ -125,6 +130,30 @@ export function useUpdateRow(key: CollectionKey) {
       const { data, error } = await supabase.from(key).update(patch).eq("id", id).select().single();
       if (error) throw new Error(error.message);
       return data as Row;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["collection", key] }),
+  });
+}
+
+/**
+ * Persists a full drag-and-drop reorder: `orderedIds` is the new top-to-bottom row order.
+ * Serial numbers are 1-based (row 1 = "ক্রম নং ১") to match the manual serial number field.
+ */
+export function useReorderRows(key: CollectionKey) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderedIds: string[]) => {
+      const supabase = getSupabaseBrowserClient();
+      const results = await Promise.all(
+        orderedIds.map((id, index) =>
+          supabase
+            .from(key)
+            .update({ sort_order: index + 1 })
+            .eq("id", id),
+        ),
+      );
+      const failed = results.find((r) => r.error);
+      if (failed?.error) throw new Error(failed.error.message);
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["collection", key] }),
   });

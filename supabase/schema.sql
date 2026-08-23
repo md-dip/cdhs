@@ -160,6 +160,7 @@ create table if not exists public.teachers (
   phone text not null default '',
   photo text not null default '',
   status text not null default 'published' check (status in ('published', 'unpublished')),
+  sort_order integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -171,9 +172,36 @@ create table if not exists public.committee (
   designation text not null default '',
   phone text not null default '',
   status text not null default 'published' check (status in ('published', 'unpublished')),
+  sort_order integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- sort_order backfill for tables that pre-date this column (safe to re-run: once every
+-- row has a non-zero value the "where sort_order = 0" filter matches nothing).
+alter table public.teachers add column if not exists sort_order integer not null default 0;
+alter table public.committee add column if not exists sort_order integer not null default 0;
+
+do $$
+declare
+  t text;
+begin
+  foreach t in array array['teachers', 'committee']
+  loop
+    execute format(
+      $f$
+        with ranked as (
+          select id, row_number() over (order by created_at desc) as rn
+          from public.%1$I
+        )
+        update public.%1$I x set sort_order = ranked.rn
+        from ranked
+        where ranked.id = x.id and x.sort_order = 0;
+      $f$,
+      t
+    );
+  end loop;
+end $$;
 
 create table if not exists public.students (
   id uuid primary key default gen_random_uuid(),

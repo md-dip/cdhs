@@ -1,11 +1,12 @@
-import { useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Search } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Search, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import type { SectionConfig } from "@/lib/admin-config";
 import {
   useCollection,
   useCreateRow,
   useDeleteRow,
+  useReorderRows,
   useUpdateRow,
   type Row,
 } from "@/lib/queries/collections";
@@ -24,18 +25,59 @@ export function CrudSection({ config }: { config: SectionConfig }) {
   const createRow = useCreateRow(config.key);
   const updateRow = useUpdateRow(config.key);
   const deleteRow = useDeleteRow(config.key);
+  const reorderRows = useReorderRows(config.key);
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Row | null>(null);
   const [draft, setDraft] = useState<Record<string, string>>(() => emptyDraft(config));
   const [showForm, setShowForm] = useState(false);
 
+  // Mirrors `rows` so a drag can reorder instantly, without waiting on the round trip
+  // to Supabase; resyncs whenever the server data changes (fetch, reorder settle, etc).
+  const [order, setOrder] = useState<Row[]>(rows);
+  useEffect(() => setOrder(rows), [rows]);
+  const dragFromIndex = useRef<number | null>(null);
+
+  const canDrag = Boolean(config.orderable) && query.trim() === "";
+
+  const handleDragStart = (index: number) => (e: React.DragEvent) => {
+    dragFromIndex.current = index;
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (index: number) => (e: React.DragEvent) => {
+    if (!canDrag) return;
+    e.preventDefault();
+    const from = dragFromIndex.current;
+    if (from === null || from === index) return;
+    dragFromIndex.current = index;
+    setOrder((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(index, 0, moved!);
+      return next;
+    });
+  };
+
+  const handleDragEnd = () => {
+    dragFromIndex.current = null;
+    // Reflect the new serial numbers locally right away — otherwise the "ক্রম" column
+    // would still show the old numbers until the Supabase round trip settles.
+    const renumbered = order.map((r, i) => ({ ...r, sort_order: i + 1 }));
+    setOrder(renumbered);
+    reorderRows.mutate(
+      renumbered.map((r) => r.id),
+      { onError: (err) => toast.error(err.message || "ক্রম পরিবর্তন ব্যর্থ হয়েছে") },
+    );
+  };
+
+  const orderable = config.orderable ? order : rows;
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return rows;
-    return rows.filter((r) =>
+    if (!q) return orderable;
+    return orderable.filter((r) =>
       Object.values(r).some((v) => typeof v === "string" && v.toLowerCase().includes(q)),
     );
-  }, [rows, query]);
+  }, [orderable, query]);
 
   const startNew = () => {
     setEditing(null);
@@ -55,9 +97,32 @@ export function CrudSection({ config }: { config: SectionConfig }) {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    let payload: Record<string, string | number> = draft;
+    if (config.orderable) {
+      const raw = (draft["sort_order"] ?? "").trim();
+      if (!raw) {
+        window.alert("ক্রম নম্বর (সিরিয়াল) আবশ্যক। অনুগ্রহ করে একটি ক্রম নম্বর দিন।");
+        return;
+      }
+      const serial = Number(raw);
+      if (!Number.isFinite(serial)) {
+        window.alert("ক্রম নম্বরটি অবশ্যই একটি সংখ্যা হতে হবে।");
+        return;
+      }
+      const clash = rows.find((r) => r.id !== editing?.id && Number(r["sort_order"]) === serial);
+      if (clash) {
+        window.alert(
+          `ক্রম নম্বর ${serial} ইতিমধ্যে "${String(clash["name"] ?? "")}" এর জন্য ব্যবহৃত হয়েছে। অনুগ্রহ করে ভিন্ন একটি ক্রম নম্বর দিন।`,
+        );
+        return;
+      }
+      payload = { ...draft, sort_order: serial };
+    }
+
     if (editing) {
       updateRow.mutate(
-        { id: editing.id, patch: draft },
+        { id: editing.id, patch: payload },
         {
           onSuccess: () => {
             toast.success("তথ্য হালনাগাদ করা হয়েছে");
@@ -68,7 +133,7 @@ export function CrudSection({ config }: { config: SectionConfig }) {
         },
       );
     } else {
-      createRow.mutate(draft, {
+      createRow.mutate(payload, {
         onSuccess: () => {
           toast.success("নতুন তথ্য যোগ করা হয়েছে");
           setShowForm(false);
@@ -144,7 +209,9 @@ export function CrudSection({ config }: { config: SectionConfig }) {
                 ) : (
                   <input
                     id={`f-${f.name}`}
-                    type={f.type === "password" ? "password" : "text"}
+                    type={
+                      f.type === "password" ? "password" : f.type === "number" ? "number" : "text"
+                    }
                     value={draft[f.name] ?? ""}
                     onChange={(e) => setDraft({ ...draft, [f.name]: e.target.value })}
                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -190,10 +257,23 @@ export function CrudSection({ config }: { config: SectionConfig }) {
             className="w-full bg-transparent text-sm outline-none"
           />
         </div>
+        {config.orderable ? (
+          <p className="mb-3 text-xs text-muted-foreground">
+            {canDrag
+              ? "সারির বাঁ পাশের হাতল ধরে টেনে উপরে-নিচে সরালে ক্রম বদলাবে — এই ক্রম অনুযায়ী মূল ওয়েবসাইটে সিরিয়াল দেখানো হবে।"
+              : "সার্চ চালু থাকা অবস্থায় ক্রম পরিবর্তন করা যাবে না। ক্রম বদলাতে সার্চ খালি করুন।"}
+          </p>
+        ) : null}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[600px] text-sm">
             <thead className="bg-secondary text-secondary-foreground">
               <tr>
+                {config.orderable ? (
+                  <>
+                    <th className="w-8 px-2 py-2"></th>
+                    <th className="px-3 py-2 text-left font-semibold">ক্রম</th>
+                  </>
+                ) : null}
                 {config.columns.map((c) => (
                   <th key={c.name} className="px-3 py-2 text-left font-semibold">
                     {c.label}
@@ -204,8 +284,28 @@ export function CrudSection({ config }: { config: SectionConfig }) {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((row) => (
-                <tr key={row.id} className="border-b border-border last:border-0">
+              {filtered.map((row, index) => (
+                <tr
+                  key={row.id}
+                  draggable={canDrag}
+                  onDragStart={handleDragStart(index)}
+                  onDragOver={handleDragOver(index)}
+                  onDrop={(e) => e.preventDefault()}
+                  onDragEnd={handleDragEnd}
+                  className="border-b border-border last:border-0"
+                >
+                  {config.orderable ? (
+                    <>
+                      <td className="px-2 py-2 text-center text-muted-foreground">
+                        {canDrag ? (
+                          <GripVertical className="mx-auto size-4 cursor-grab active:cursor-grabbing" />
+                        ) : null}
+                      </td>
+                      <td className="px-3 py-2 font-medium">
+                        {String(row["sort_order"] ?? index + 1)}
+                      </td>
+                    </>
+                  ) : null}
                   {config.columns.map((c) => (
                     <td key={c.name} className="px-3 py-2 align-top">
                       {String(row[c.name] ?? "").slice(0, 90)}
@@ -272,7 +372,7 @@ export function CrudSection({ config }: { config: SectionConfig }) {
               {filtered.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={config.columns.length + 2}
+                    colSpan={config.columns.length + (config.orderable ? 4 : 2)}
                     className="px-3 py-6 text-center text-muted-foreground"
                   >
                     কোনো তথ্য পাওয়া যায়নি।

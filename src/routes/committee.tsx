@@ -49,7 +49,7 @@ function Committee() {
               <tbody>
                 {committee.map((row, i) => (
                   <tr key={row.id} className="border-b border-border/70 last:border-0">
-                    <td className="px-3 py-2.5">{n(String(row["serial"] ?? i + 1))}</td>
+                    <td className="px-3 py-2.5">{n(String(i + 1))}</td>
                     <td className="px-3 py-2.5">{tx(String(row["name"] ?? ""))}</td>
                     <td className="px-3 py-2.5">{tx(String(row["designation"] ?? ""))}</td>
                   </tr>
