@@ -3,7 +3,7 @@ import type { CollectionKey } from "./queries/collections";
 export type Field = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "date" | "select" | "password" | "number";
+  type?: "text" | "textarea" | "date" | "select" | "password";
   options?: string[];
   full?: boolean;
 };
@@ -82,7 +82,6 @@ export const sections: SectionConfig[] = [
       { name: "subject", label: "বিষয়" },
     ],
     fields: [
-      { name: "sort_order", label: "ক্রম নং (সিরিয়াল)", type: "number" },
       { name: "name", label: "নাম" },
       { name: "role", label: "পদবি" },
       { name: "subject", label: "বিষয়" },
@@ -103,7 +102,6 @@ export const sections: SectionConfig[] = [
       { name: "designation", label: "পদবি" },
     ],
     fields: [
-      { name: "sort_order", label: "ক্রম নং (সিরিয়াল)", type: "number" },
       { name: "name", label: "নাম" },
       { name: "designation", label: "পদবি" },
       { name: "phone", label: "মোবাইল" },

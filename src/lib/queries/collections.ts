@@ -30,15 +30,41 @@ export type CollectionKey = (typeof COLLECTION_KEYS)[number];
 /** Collections with an admin-driven drag-and-drop display order (see `sort_order` column). */
 export const ORDERABLE_COLLECTIONS = new Set<CollectionKey>(["teachers", "committee"]);
 
+function buildCollectionQuery(
+  supabase: ReturnType<typeof getSupabaseServerClient>,
+  key: CollectionKey,
+  onlyPublished: boolean | undefined,
+  useSortOrder: boolean,
+) {
+  let query = useSortOrder
+    ? supabase.from(key).select("*").order("sort_order", { ascending: true })
+    : supabase.from(key).select("*").order("created_at", { ascending: false });
+  if (onlyPublished) query = query.eq("status", "published");
+  return query;
+}
+
 const fetchCollectionFn = createServerFn({ method: "GET" })
   .validator(z.object({ key: z.enum(COLLECTION_KEYS), onlyPublished: z.boolean().optional() }))
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient();
-    let query = ORDERABLE_COLLECTIONS.has(data.key)
-      ? supabase.from(data.key).select("*").order("sort_order", { ascending: true })
-      : supabase.from(data.key).select("*").order("created_at", { ascending: false });
-    if (data.onlyPublished) query = query.eq("status", "published");
-    const { data: rows, error } = await query;
+    const orderable = ORDERABLE_COLLECTIONS.has(data.key);
+    let { data: rows, error } = await buildCollectionQuery(
+      supabase,
+      data.key,
+      data.onlyPublished,
+      orderable,
+    );
+    // "42703" = undefined_column — the `sort_order` migration (supabase/schema.sql) hasn't
+    // been run against this database yet. Fall back to the pre-migration ordering instead
+    // of hard-erroring, so the site stays up while that migration is still pending.
+    if (orderable && error?.code === "42703") {
+      ({ data: rows, error } = await buildCollectionQuery(
+        supabase,
+        data.key,
+        data.onlyPublished,
+        false,
+      ));
+    }
     if (error) throw new Error(error.message);
     return (rows ?? []) as Row[];
   });
@@ -135,10 +161,7 @@ export function useUpdateRow(key: CollectionKey) {
   });
 }
 
-/**
- * Persists a full drag-and-drop reorder: `orderedIds` is the new top-to-bottom row order.
- * Serial numbers are 1-based (row 1 = "ক্রম নং ১") to match the manual serial number field.
- */
+/** Persists a full drag-and-drop reorder: `orderedIds` is the new top-to-bottom row order. */
 export function useReorderRows(key: CollectionKey) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -146,14 +169,19 @@ export function useReorderRows(key: CollectionKey) {
       const supabase = getSupabaseBrowserClient();
       const results = await Promise.all(
         orderedIds.map((id, index) =>
-          supabase
-            .from(key)
-            .update({ sort_order: index + 1 })
-            .eq("id", id),
+          supabase.from(key).update({ sort_order: index }).eq("id", id),
         ),
       );
       const failed = results.find((r) => r.error);
-      if (failed?.error) throw new Error(failed.error.message);
+      if (failed?.error) {
+        // See the matching comment in fetchCollectionFn — the DB migration is still pending.
+        if (failed.error.code === "42703") {
+          throw new Error(
+            "ক্রম পরিবর্তন এখনো চালু হয়নি — ওয়েবসাইট আপডেট শেষ হওয়া পর্যন্ত অপেক্ষা করুন।",
+          );
+        }
+        throw new Error(failed.error.message);
+      }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["collection", key] }),
   });

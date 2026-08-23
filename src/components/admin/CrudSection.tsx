@@ -60,12 +60,8 @@ export function CrudSection({ config }: { config: SectionConfig }) {
 
   const handleDragEnd = () => {
     dragFromIndex.current = null;
-    // Reflect the new serial numbers locally right away — otherwise the "ক্রম" column
-    // would still show the old numbers until the Supabase round trip settles.
-    const renumbered = order.map((r, i) => ({ ...r, sort_order: i + 1 }));
-    setOrder(renumbered);
     reorderRows.mutate(
-      renumbered.map((r) => r.id),
+      order.map((r) => r.id),
       { onError: (err) => toast.error(err.message || "ক্রম পরিবর্তন ব্যর্থ হয়েছে") },
     );
   };
@@ -97,32 +93,9 @@ export function CrudSection({ config }: { config: SectionConfig }) {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    let payload: Record<string, string | number> = draft;
-    if (config.orderable) {
-      const raw = (draft["sort_order"] ?? "").trim();
-      if (!raw) {
-        window.alert("ক্রম নম্বর (সিরিয়াল) আবশ্যক। অনুগ্রহ করে একটি ক্রম নম্বর দিন।");
-        return;
-      }
-      const serial = Number(raw);
-      if (!Number.isFinite(serial)) {
-        window.alert("ক্রম নম্বরটি অবশ্যই একটি সংখ্যা হতে হবে।");
-        return;
-      }
-      const clash = rows.find((r) => r.id !== editing?.id && Number(r["sort_order"]) === serial);
-      if (clash) {
-        window.alert(
-          `ক্রম নম্বর ${serial} ইতিমধ্যে "${String(clash["name"] ?? "")}" এর জন্য ব্যবহৃত হয়েছে। অনুগ্রহ করে ভিন্ন একটি ক্রম নম্বর দিন।`,
-        );
-        return;
-      }
-      payload = { ...draft, sort_order: serial };
-    }
-
     if (editing) {
       updateRow.mutate(
-        { id: editing.id, patch: payload },
+        { id: editing.id, patch: draft },
         {
           onSuccess: () => {
             toast.success("তথ্য হালনাগাদ করা হয়েছে");
@@ -133,7 +106,7 @@ export function CrudSection({ config }: { config: SectionConfig }) {
         },
       );
     } else {
-      createRow.mutate(payload, {
+      createRow.mutate(draft, {
         onSuccess: () => {
           toast.success("নতুন তথ্য যোগ করা হয়েছে");
           setShowForm(false);
@@ -209,9 +182,7 @@ export function CrudSection({ config }: { config: SectionConfig }) {
                 ) : (
                   <input
                     id={`f-${f.name}`}
-                    type={
-                      f.type === "password" ? "password" : f.type === "number" ? "number" : "text"
-                    }
+                    type={f.type === "password" ? "password" : "text"}
                     value={draft[f.name] ?? ""}
                     onChange={(e) => setDraft({ ...draft, [f.name]: e.target.value })}
                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -301,9 +272,7 @@ export function CrudSection({ config }: { config: SectionConfig }) {
                           <GripVertical className="mx-auto size-4 cursor-grab active:cursor-grabbing" />
                         ) : null}
                       </td>
-                      <td className="px-3 py-2 font-medium">
-                        {String(row["sort_order"] ?? index + 1)}
-                      </td>
+                      <td className="px-3 py-2 font-medium">{index + 1}</td>
                     </>
                   ) : null}
                   {config.columns.map((c) => (
