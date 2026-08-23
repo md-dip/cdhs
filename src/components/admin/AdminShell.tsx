@@ -11,6 +11,7 @@ import {
   KeyRound,
   HelpCircle,
   Users,
+  History,
 } from "lucide-react";
 import { sections } from "@/lib/admin-config";
 import { useSettings } from "@/lib/queries/settings";
@@ -118,6 +119,13 @@ export function AdminShell({ children, session }: { children: ReactNode; session
               <Users className="size-4" /> ইউজার ও অ্যাডমিন
             </span>
           </NavLink>
+          {session.profile.role === "super-admin" ? (
+            <NavLink to="/tt-prodhan/activity-log" onNavigate={close}>
+              <span className="inline-flex items-center gap-2">
+                <History className="size-4" /> কার্যক্রম লগ
+              </span>
+            </NavLink>
+          ) : null}
           <NavLink to="/tt-prodhan/password" onNavigate={close}>
             <span className="inline-flex items-center gap-2">
               <KeyRound className="size-4" /> পাসওয়ার্ড ও নিরাপত্তা

@@ -525,6 +525,80 @@ create policy "media bucket: admins delete"
   using (bucket_id = 'media' and public.is_admin());
 
 -- ---------------------------------------------------------------------------
+-- change_log: full history of every insert/update/delete on the content tables
+-- below, captured automatically by a trigger (not app code) so it can't be
+-- bypassed or forgotten in some code path. Powers the super-admin-only
+-- "activity log" page, which can restore a single row to its state from
+-- right before any past change. Read access is super-admin only; there is no
+-- insert/update/delete policy at all, since only the SECURITY DEFINER trigger
+-- function is ever supposed to write here.
+-- ---------------------------------------------------------------------------
+create table if not exists public.change_log (
+  id uuid primary key default gen_random_uuid(),
+  table_name text not null,
+  row_id text not null,
+  action text not null check (action in ('insert', 'update', 'delete')),
+  old_data jsonb,
+  new_data jsonb,
+  changed_by uuid references public.profiles (id) on delete set null,
+  changed_at timestamptz not null default now()
+);
+
+create index if not exists change_log_changed_at_idx on public.change_log (changed_at desc);
+
+alter table public.change_log enable row level security;
+
+create policy "change_log: super-admins read" on public.change_log
+  for select to authenticated
+  using (public.is_super_admin());
+
+create or replace function public.log_change()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_row_id text;
+begin
+  if (tg_op = 'DELETE') then
+    v_row_id := (to_jsonb(old) ->> 'id');
+    insert into public.change_log (table_name, row_id, action, old_data, changed_by)
+    values (tg_table_name, v_row_id, 'delete', to_jsonb(old), auth.uid());
+    return old;
+  elsif (tg_op = 'UPDATE') then
+    v_row_id := (to_jsonb(new) ->> 'id');
+    insert into public.change_log (table_name, row_id, action, old_data, new_data, changed_by)
+    values (tg_table_name, v_row_id, 'update', to_jsonb(old), to_jsonb(new), auth.uid());
+    return new;
+  elsif (tg_op = 'INSERT') then
+    v_row_id := (to_jsonb(new) ->> 'id');
+    insert into public.change_log (table_name, row_id, action, new_data, changed_by)
+    values (tg_table_name, v_row_id, 'insert', to_jsonb(new), auth.uid());
+    return new;
+  end if;
+  return null;
+end;
+$$;
+
+do $$
+declare
+  t text;
+begin
+  foreach t in array array[
+    'notices', 'routines', 'teachers', 'committee', 'students', 'admissions',
+    'classes', 'books', 'results', 'posts', 'pages', 'gallery', 'settings'
+  ]
+  loop
+    execute format('drop trigger if exists log_change on public.%I;', t);
+    execute format(
+      'create trigger log_change after insert or update or delete on public.%I for each row execute function public.log_change();',
+      t
+    );
+  end loop;
+end $$;
+
+-- ---------------------------------------------------------------------------
 -- BOOTSTRAP — read this before you log in for the first time.
 -- ---------------------------------------------------------------------------
 -- New sign-ups get a profile with active = false (nobody should be able to grant

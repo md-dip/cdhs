@@ -23,6 +23,7 @@ import { Route as NoticesIndexRouteImport } from './routes/notices.index'
 import { Route as NoticesSlugRouteImport } from './routes/notices.$slug'
 import { Route as TtProdhanIndexRouteImport } from './routes/tt-prodhan.index'
 import { Route as TtProdhanSectionRouteImport } from './routes/tt-prodhan.$section'
+import { Route as TtProdhanActivityLogRouteImport } from './routes/tt-prodhan.activity-log'
 import { Route as TtProdhanGuideRouteImport } from './routes/tt-prodhan.guide'
 import { Route as TtProdhanMediaRouteImport } from './routes/tt-prodhan.media'
 import { Route as TtProdhanPasswordRouteImport } from './routes/tt-prodhan.password'
@@ -99,6 +100,11 @@ const TtProdhanSectionRoute = TtProdhanSectionRouteImport.update({
   path: '/$section',
   getParentRoute: () => TtProdhanRoute,
 } as any)
+const TtProdhanActivityLogRoute = TtProdhanActivityLogRouteImport.update({
+  id: '/activity-log',
+  path: '/activity-log',
+  getParentRoute: () => TtProdhanRoute,
+} as any)
 const TtProdhanGuideRoute = TtProdhanGuideRouteImport.update({
   id: '/guide',
   path: '/guide',
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/tt-prodhan': typeof TtProdhanRouteWithChildren
   '/notices/$slug': typeof NoticesSlugRoute
   '/tt-prodhan/$section': typeof TtProdhanSectionRoute
+  '/tt-prodhan/activity-log': typeof TtProdhanActivityLogRoute
   '/tt-prodhan/guide': typeof TtProdhanGuideRoute
   '/tt-prodhan/media': typeof TtProdhanMediaRoute
   '/tt-prodhan/password': typeof TtProdhanPasswordRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/teachers': typeof TeachersRoute
   '/notices/$slug': typeof NoticesSlugRoute
   '/tt-prodhan/$section': typeof TtProdhanSectionRoute
+  '/tt-prodhan/activity-log': typeof TtProdhanActivityLogRoute
   '/tt-prodhan/guide': typeof TtProdhanGuideRoute
   '/tt-prodhan/media': typeof TtProdhanMediaRoute
   '/tt-prodhan/password': typeof TtProdhanPasswordRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/tt-prodhan': typeof TtProdhanRouteWithChildren
   '/notices/$slug': typeof NoticesSlugRoute
   '/tt-prodhan/$section': typeof TtProdhanSectionRoute
+  '/tt-prodhan/activity-log': typeof TtProdhanActivityLogRoute
   '/tt-prodhan/guide': typeof TtProdhanGuideRoute
   '/tt-prodhan/media': typeof TtProdhanMediaRoute
   '/tt-prodhan/password': typeof TtProdhanPasswordRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
     | '/tt-prodhan'
     | '/notices/$slug'
     | '/tt-prodhan/$section'
+    | '/tt-prodhan/activity-log'
     | '/tt-prodhan/guide'
     | '/tt-prodhan/media'
     | '/tt-prodhan/password'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/teachers'
     | '/notices/$slug'
     | '/tt-prodhan/$section'
+    | '/tt-prodhan/activity-log'
     | '/tt-prodhan/guide'
     | '/tt-prodhan/media'
     | '/tt-prodhan/password'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/tt-prodhan'
     | '/notices/$slug'
     | '/tt-prodhan/$section'
+    | '/tt-prodhan/activity-log'
     | '/tt-prodhan/guide'
     | '/tt-prodhan/media'
     | '/tt-prodhan/password'
@@ -368,6 +380,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TtProdhanSectionRouteImport
       parentRoute: typeof TtProdhanRoute
     }
+    '/tt-prodhan/activity-log': {
+      id: '/tt-prodhan/activity-log'
+      path: '/activity-log'
+      fullPath: '/tt-prodhan/activity-log'
+      preLoaderRoute: typeof TtProdhanActivityLogRouteImport
+      parentRoute: typeof TtProdhanRoute
+    }
     '/tt-prodhan/guide': {
       id: '/tt-prodhan/guide'
       path: '/guide'
@@ -408,6 +427,7 @@ declare module '@tanstack/react-router' {
 
 interface TtProdhanRouteChildren {
   TtProdhanSectionRoute: typeof TtProdhanSectionRoute
+  TtProdhanActivityLogRoute: typeof TtProdhanActivityLogRoute
   TtProdhanGuideRoute: typeof TtProdhanGuideRoute
   TtProdhanMediaRoute: typeof TtProdhanMediaRoute
   TtProdhanPasswordRoute: typeof TtProdhanPasswordRoute
@@ -418,6 +438,7 @@ interface TtProdhanRouteChildren {
 
 const TtProdhanRouteChildren: TtProdhanRouteChildren = {
   TtProdhanSectionRoute: TtProdhanSectionRoute,
+  TtProdhanActivityLogRoute: TtProdhanActivityLogRoute,
   TtProdhanGuideRoute: TtProdhanGuideRoute,
   TtProdhanMediaRoute: TtProdhanMediaRoute,
   TtProdhanPasswordRoute: TtProdhanPasswordRoute,
