@@ -207,6 +207,7 @@ export const BN_EN: Record<string, string> = {
   রাজশাহী: "Rajshahi",
   "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়": "Chhatni Dekhra High School",
   "ছাতনী, ছাতনী ঢেকড়া, আদমদীঘি, বগুড়া": "Chhatni, Chhatni Dekhra, Adamdighi, Bogura",
+  "ছাতনী ঢেকড়া, আদমদীঘি, বগুড়া": "Chhatni Dekhra, Adamdighi, Bogura",
   "শিক্ষাই আলো, শিক্ষাই মুক্তি": "Education is light, education is freedom",
   "শনিবার – বৃহস্পতিবার, সকাল ১০টা – বিকাল ৪টা": "Saturday – Thursday, 10:00 AM – 4:00 PM",
 
