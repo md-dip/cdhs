@@ -80,6 +80,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      // The site has its own Bengali/English toggle — this stops the browser's
+      // own auto-translate from also kicking in and fighting with it.
+      { name: "google", content: "notranslate" },
       { title: "ছাতনী ঢেকড়া উচ্চ বিদ্যালয় | Chhatni Dekhra High School" },
       {
         name: "description",
@@ -119,7 +122,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="bn">
+    <html lang="bn" translate="no">
       <head>
         <HeadContent />
       </head>
