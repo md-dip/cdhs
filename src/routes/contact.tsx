@@ -67,7 +67,7 @@ function Contact() {
             {mapLoaded ? (
               <iframe
                 title={tx("বিদ্যালয়ের অবস্থান")}
-                src="https://www.google.com/maps?q=24.7667314,88.9777527&output=embed"
+                src="https://www.google.com/maps?cid=9805689754168255060&output=embed"
                 width="100%"
                 height="260"
                 className="block"
