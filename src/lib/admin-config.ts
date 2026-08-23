@@ -244,10 +244,17 @@ export const sections: SectionConfig[] = [
     columns: [
       { name: "caption", label: "ক্যাপশন" },
       { name: "src", label: "ছবির লিংক" },
+      { name: "showOnHome", label: "হোমপেজ স্লাইডারে দেখান" },
     ],
     fields: [
       { name: "caption", label: "ক্যাপশন", full: true },
       { name: "src", label: "ছবির লিংক (মিডিয়া লাইব্রেরি থেকে)", full: true },
+      {
+        name: "showOnHome",
+        label: "হোমপেজ স্লাইডারে দেখান",
+        type: "select",
+        options: ["off", "on"],
+      },
       statusField,
     ],
   },

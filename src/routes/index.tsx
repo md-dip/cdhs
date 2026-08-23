@@ -24,7 +24,7 @@ const title = "ছাতনী ঢেকড়া উচ্চ বিদ্য�
 const description =
   "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়, আদমদীঘি, বগুড়ার অফিসিয়াল ওয়েবসাইট। নোটিশ, রুটিন, ফলাফল, ভর্তি ও শিক্ষকমণ্ডলীর তথ্য।";
 
-const HOME_COLLECTIONS = ["notices", "students", "classes", "teachers"] as const;
+const HOME_COLLECTIONS = ["notices", "students", "classes", "teachers", "gallery"] as const;
 
 const GLANCE_FALLBACK_BN =
   "১৯৬৫ সালে প্রতিষ্ঠিত এই বিদ্যালয়টি বগুড়া জেলার আদমদীঘি উপজেলার ছাতনী ঢেকড়া এলাকায় অবস্থিত। ষষ্ঠ থেকে দশম শ্রেণি পর্যন্ত বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখায় পাঠদান করা হয়। ডিজিটাল বাংলাদেশ গড়ার লক্ষ্যে বিদ্যালয়ের সকল তথ্য এই ওয়েবসাইটে নিয়মিত হালনাগাদ করা হয়।";
@@ -64,18 +64,28 @@ function Index() {
   const { t, n, tx, bt } = useT();
   const settings = useSettings();
   const notices = usePublished("notices");
+  const gallery = usePublished("gallery");
+  const heroSlides = useMemo(() => {
+    const marked = gallery.filter((g) => g["showOnHome"] === "on");
+    return marked.length > 0
+      ? marked.map((g) => ({ src: String(g["src"] ?? ""), caption: String(g["caption"] ?? "") }))
+      : slides;
+  }, [gallery]);
   useEffect(() => {
-    const tm = setInterval(() => setI((p) => (p + 1) % slides.length), 5000);
+    setI(0);
+  }, [heroSlides.length]);
+  useEffect(() => {
+    const tm = setInterval(() => setI((p) => (p + 1) % heroSlides.length), 5000);
     return () => clearInterval(tm);
-  }, []);
+  }, [heroSlides.length]);
 
   return (
     <Layout>
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="relative overflow-hidden rounded-lg shadow-[var(--shadow-raise)]">
-          {slides.map((s, idx) => (
+          {heroSlides.map((s, idx) => (
             <img
-              key={s.caption}
+              key={s.caption + idx}
               src={s.src}
               alt={s.caption}
               className={`h-[280px] w-full object-cover md:h-[420px] ${idx === i ? "block" : "hidden"}`}
@@ -83,19 +93,19 @@ function Index() {
           ))}
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-deep/80 to-transparent px-6 py-5">
             <p className="text-lg font-medium text-brand-foreground">
-              {tx(slides[i]?.caption ?? "")}
+              {tx(heroSlides[i]?.caption ?? "")}
             </p>
           </div>
           <button
             aria-label={t("আগের ছবি", "Previous slide")}
-            onClick={() => setI((p) => (p - 1 + slides.length) % slides.length)}
+            onClick={() => setI((p) => (p - 1 + heroSlides.length) % heroSlides.length)}
             className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-brand-deep/60 p-2 text-brand-foreground hover:bg-brand-deep"
           >
             <ChevronLeft className="size-5" />
           </button>
           <button
             aria-label={t("পরের ছবি", "Next slide")}
-            onClick={() => setI((p) => (p + 1) % slides.length)}
+            onClick={() => setI((p) => (p + 1) % heroSlides.length)}
             className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-brand-deep/60 p-2 text-brand-foreground hover:bg-brand-deep"
           >
             <ChevronRight className="size-5" />

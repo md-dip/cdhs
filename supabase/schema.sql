@@ -256,6 +256,7 @@ create table if not exists public.gallery (
   id uuid primary key default gen_random_uuid(),
   caption text not null default '',
   src text not null default '',
+  "showOnHome" text not null default 'off' check ("showOnHome" in ('on', 'off')),
   status text not null default 'published' check (status in ('published', 'unpublished')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
