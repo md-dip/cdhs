@@ -253,6 +253,7 @@ export const sections: SectionConfig[] = [
       { name: "caption", label: "ক্যাপশন" },
       { name: "src", label: "ছবির লিংক" },
       { name: "showOnHome", label: "হোমপেজ স্লাইডারে দেখান" },
+      { name: "showOnAbout", label: "প্রতিষ্ঠান পরিচিতিতে দেখান" },
     ],
     fields: [
       { name: "caption", label: "ক্যাপশন", full: true },
@@ -260,6 +261,12 @@ export const sections: SectionConfig[] = [
       {
         name: "showOnHome",
         label: "হোমপেজ স্লাইডারে দেখান",
+        type: "select",
+        options: ["off", "on"],
+      },
+      {
+        name: "showOnAbout",
+        label: "প্রতিষ্ঠান পরিচিতি পেজের প্রধান ছবি হিসেবে দেখান (শুধু একটি ছবিতে চালু রাখুন)",
         type: "select",
         options: ["off", "on"],
       },

@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Layout, PageHeader, Panel } from "@/components/site/Layout";
 import { school, images, facilities } from "@/lib/site-data";
-import { pageBySlugQueryOptions } from "@/lib/queries/collections";
+import {
+  collectionQueryOptions,
+  pageBySlugQueryOptions,
+  usePublished,
+} from "@/lib/queries/collections";
 import { useSettings } from "@/lib/queries/settings";
 import { useT } from "@/lib/i18n";
 
@@ -16,7 +20,15 @@ const MISSION_FALLBACK =
   "মানসম্মত শিক্ষা, নৈতিক মূল্যবোধ ও ডিজিটাল দক্ষতার সমন্বয়ে দেশপ্রেমিক ও দায়িত্বশীল নাগরিক গড়ে তোলা।";
 
 export const Route = createFileRoute("/about")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(pageBySlugQueryOptions("about")),
+  loader: async ({ context }) => {
+    const [page] = await Promise.all([
+      context.queryClient.ensureQueryData(pageBySlugQueryOptions("about")),
+      context.queryClient.ensureQueryData(
+        collectionQueryOptions("gallery", { onlyPublished: true }),
+      ),
+    ]);
+    return { page };
+  },
   head: () => ({
     meta: [
       { title },
@@ -32,19 +44,23 @@ function About() {
   const { tx, n, bt } = useT();
   const settings = useSettings();
   const founded = settings["founded"] || school.founded;
-  const page = Route.useLoaderData();
+  const { page } = Route.useLoaderData();
   const historyBn = String(page?.["body"] || "") || HISTORY_FALLBACK;
   const historyEn = String(page?.["bodyEn"] || "");
   const missionBn = String(settings["missionBn"] || MISSION_FALLBACK);
   const missionEn = String(settings["missionEn"] || "");
+  const gallery = usePublished("gallery");
+  const coverPhoto = gallery.find((g) => g["showOnAbout"] === "on");
+  const coverSrc = String(coverPhoto?.["src"] || "") || images.schoolBuilding;
+  const coverAlt = coverPhoto ? tx(String(coverPhoto["caption"] ?? "")) : tx(school.name);
   return (
     <Layout>
       <PageHeader title={tx("প্রতিষ্ঠান পরিচিতি")} subtitle={tx(school.address)} />
       <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 lg:grid-cols-[1fr_380px]">
         <div className="space-y-6">
           <img
-            src={images.schoolBuilding}
-            alt={tx(school.name)}
+            src={coverSrc}
+            alt={coverAlt}
             className="h-[320px] w-full rounded-lg object-cover shadow-[var(--shadow-card)]"
           />
           <Panel title={tx("সংক্ষিপ্ত ইতিহাস")}>
