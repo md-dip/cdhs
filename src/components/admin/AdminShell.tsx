@@ -114,23 +114,25 @@ export function AdminShell({ children, session }: { children: ReactNode; session
               <Settings className="size-4" /> সাধারণ সেটিংস
             </span>
           </NavLink>
-          <NavLink to="/tt-prodhan/users" onNavigate={close}>
-            <span className="inline-flex items-center gap-2">
-              <Users className="size-4" /> ইউজার ও অ্যাডমিন
-            </span>
-          </NavLink>
           {session.profile.role === "super-admin" ? (
-            <NavLink to="/tt-prodhan/activity-log" onNavigate={close}>
-              <span className="inline-flex items-center gap-2">
-                <History className="size-4" /> কার্যক্রম লগ
-              </span>
-            </NavLink>
+            <>
+              <NavLink to="/tt-prodhan/users" onNavigate={close}>
+                <span className="inline-flex items-center gap-2">
+                  <Users className="size-4" /> ইউজার ও অ্যাডমিন
+                </span>
+              </NavLink>
+              <NavLink to="/tt-prodhan/password" onNavigate={close}>
+                <span className="inline-flex items-center gap-2">
+                  <KeyRound className="size-4" /> পাসওয়ার্ড ও নিরাপত্তা
+                </span>
+              </NavLink>
+              <NavLink to="/tt-prodhan/activity-log" onNavigate={close}>
+                <span className="inline-flex items-center gap-2">
+                  <History className="size-4" /> কার্যক্রম লগ
+                </span>
+              </NavLink>
+            </>
           ) : null}
-          <NavLink to="/tt-prodhan/password" onNavigate={close}>
-            <span className="inline-flex items-center gap-2">
-              <KeyRound className="size-4" /> পাসওয়ার্ড ও নিরাপত্তা
-            </span>
-          </NavLink>
           <NavLink to="/tt-prodhan/guide" onNavigate={close}>
             <span className="inline-flex items-center gap-2">
               <HelpCircle className="size-4" /> ব্যবহার নির্দেশিকা

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Trash2, UserPlus } from "lucide-react";
+import { Trash2, UserPlus, ShieldAlert } from "lucide-react";
 import { AdminCard } from "@/components/admin/AdminShell";
 import { useProfiles, useUpdateProfile } from "@/lib/queries/profiles";
 import { createAdminFn, removeAdminFn } from "@/lib/server-fns/users";
@@ -15,6 +15,26 @@ const ROLE_OPTIONS = ["super-admin", "editor", "viewer"] as const;
 
 function UsersPage() {
   const { session } = Route.useRouteContext();
+  if (session.profile.role !== "super-admin") {
+    return (
+      <div className="space-y-5">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-brand-deep">ইউজার ও অ্যাডমিন</h1>
+        </div>
+        <AdminCard title="প্রবেশাধিকার নেই">
+          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <ShieldAlert className="size-4 shrink-0 text-destructive" />
+            এই পাতাটি শুধুমাত্র সুপার অ্যাডমিনদের জন্য।
+          </p>
+        </AdminCard>
+      </div>
+    );
+  }
+  return <UsersContent />;
+}
+
+function UsersContent() {
+  const { session } = Route.useRouteContext();
   const profiles = useProfiles();
   const updateProfile = useUpdateProfile();
   const queryClient = useQueryClient();
@@ -26,7 +46,6 @@ function UsersPage() {
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : "মুছে ফেলা ব্যর্থ হয়েছে"),
   });
-  const isSuperAdmin = session.profile.role === "super-admin";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -61,77 +80,75 @@ function UsersPage() {
         </p>
       </div>
 
-      {isSuperAdmin ? (
-        <AdminCard
-          title="নতুন অ্যাডমিন যোগ করুন"
-          subtitle="নাম, ইমেইল, পাসওয়ার্ড ও অনুমতি দিয়ে সরাসরি অ্যাকাউন্ট তৈরি হবে — কোনো ইমেইল পাঠানো হবে না"
-        >
-          <form onSubmit={createAdmin} className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm font-medium" htmlFor="new-name">
-                নাম
-              </label>
-              <input
-                id="new-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                required
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium" htmlFor="new-email">
-                ইমেইল
-              </label>
-              <input
-                id="new-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                required
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium" htmlFor="new-password">
-                পাসওয়ার্ড
-              </label>
-              <input
-                id="new-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                minLength={6}
-                required
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium" htmlFor="new-role">
-                অনুমতি
-              </label>
-              <select
-                id="new-role"
-                value={role}
-                onChange={(e) => setRole(e.target.value as (typeof ROLE_OPTIONS)[number])}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
-                {ROLE_OPTIONS.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              disabled={creating}
-              className="inline-flex w-fit items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60 md:col-span-2"
+      <AdminCard
+        title="নতুন অ্যাডমিন যোগ করুন"
+        subtitle="নাম, ইমেইল, পাসওয়ার্ড ও অনুমতি দিয়ে সরাসরি অ্যাকাউন্ট তৈরি হবে — কোনো ইমেইল পাঠানো হবে না"
+      >
+        <form onSubmit={createAdmin} className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="mb-1 block text-sm font-medium" htmlFor="new-name">
+              নাম
+            </label>
+            <input
+              id="new-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              required
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium" htmlFor="new-email">
+              ইমেইল
+            </label>
+            <input
+              id="new-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              required
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium" htmlFor="new-password">
+              পাসওয়ার্ড
+            </label>
+            <input
+              id="new-password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              minLength={6}
+              required
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium" htmlFor="new-role">
+              অনুমতি
+            </label>
+            <select
+              id="new-role"
+              value={role}
+              onChange={(e) => setRole(e.target.value as (typeof ROLE_OPTIONS)[number])}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              <UserPlus className="size-4" /> যোগ করুন
-            </button>
-          </form>
-        </AdminCard>
-      ) : null}
+              {ROLE_OPTIONS.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            disabled={creating}
+            className="inline-flex w-fit items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60 md:col-span-2"
+          >
+            <UserPlus className="size-4" /> যোগ করুন
+          </button>
+        </form>
+      </AdminCard>
 
       <AdminCard title="সকল অ্যাডমিন" subtitle={`মোট ${profiles.length} জন`}>
         <div className="overflow-x-auto">
@@ -147,7 +164,7 @@ function UsersPage() {
             </thead>
             <tbody>
               {profiles.map((p) => {
-                const canEdit = isSuperAdmin && p.id !== session.user.id;
+                const canEdit = p.id !== session.user.id;
                 return (
                   <tr key={p.id} className="border-b border-border last:border-0">
                     <td className="px-3 py-2">{p.name}</td>

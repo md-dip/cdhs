@@ -1,6 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ShieldAlert } from "lucide-react";
 import { AdminCard } from "@/components/admin/AdminShell";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -9,6 +10,28 @@ export const Route = createFileRoute("/tt-prodhan/password")({
 });
 
 function PasswordPage() {
+  const { session } = Route.useRouteContext();
+  if (session.profile.role !== "super-admin") {
+    return (
+      <div className="space-y-5">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-brand-deep">
+            পাসওয়ার্ড ও নিরাপত্তা
+          </h1>
+        </div>
+        <AdminCard title="প্রবেশাধিকার নেই">
+          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <ShieldAlert className="size-4 shrink-0 text-destructive" />
+            এই পাতাটি শুধুমাত্র সুপার অ্যাডমিনদের জন্য।
+          </p>
+        </AdminCard>
+      </div>
+    );
+  }
+  return <PasswordForm />;
+}
+
+function PasswordForm() {
   const { session } = Route.useRouteContext();
   const router = useRouter();
   const [oldPass, setOldPass] = useState("");
