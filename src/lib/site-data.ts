@@ -9,7 +9,7 @@ export const images = { schoolBuilding, classroom, assembly, headmaster, logo };
 export const school = {
   name: "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়",
   nameEn: "CHHATNI DEKHRA HIGH SCHOOL",
-  address: "ছাতনী, ছাতনী ঢেকড়া, আদমদীঘি, বগুড়া",
+  address: "ছাতনী ঢেকড়া, আদমদীঘি, বগুড়া",
   phone: "০১৭২৬২৬০৯৯৬",
   email: "info@chhatnidekhrahs.edu.bd",
   eiin: "১১৯১১৯",
