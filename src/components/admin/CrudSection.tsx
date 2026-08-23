@@ -206,7 +206,7 @@ export function CrudSection({ config }: { config: SectionConfig }) {
                 <tr key={row.id} className="border-b border-border last:border-0">
                   {config.columns.map((c) => (
                     <td key={c.name} className="px-3 py-2 align-top">
-                      {String(row[c.name] ?? "—").slice(0, 90)}
+                      {String(row[c.name] ?? "").slice(0, 90)}
                     </td>
                   ))}
                   <td className="px-3 py-2">

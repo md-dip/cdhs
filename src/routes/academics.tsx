@@ -3,7 +3,7 @@ import { Layout, PageHeader, Panel } from "@/components/site/Layout";
 import { classSeats, books, results } from "@/lib/site-data";
 import { useT } from "@/lib/i18n";
 
-const title = "একাডেমিক তথ্য — ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
+const title = "একাডেমিক তথ্য | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
 const description = "শ্রেণি ও আসন সংখ্যা, পাঠ্যপুস্তকের তালিকা এবং এসএসসি ফলাফলের তথ্য।";
 
 export const Route = createFileRoute("/academics")({

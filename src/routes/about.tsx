@@ -3,7 +3,7 @@ import { Layout, PageHeader, Panel } from "@/components/site/Layout";
 import { school, images, facilities } from "@/lib/site-data";
 import { useT } from "@/lib/i18n";
 
-const title = "প্রতিষ্ঠান পরিচিতি — ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
+const title = "প্রতিষ্ঠান পরিচিতি | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
 const description =
   "১৯৬৯ সালে প্রতিষ্ঠিত ছাতনী ঢেকড়া উচ্চ বিদ্যালয়ের ইতিহাস, সুযোগ-সুবিধা ও মৌলিক তথ্য।";
 

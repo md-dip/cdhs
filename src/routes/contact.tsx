@@ -6,7 +6,7 @@ import { Layout, PageHeader, Panel } from "@/components/site/Layout";
 import { school } from "@/lib/site-data";
 import { useT } from "@/lib/i18n";
 
-const title = "যোগাযোগ — ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
+const title = "যোগাযোগ | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
 const description = "বিদ্যালয় অফিসের ঠিকানা, ফোন, ই-মেইল ও অফিস সময়সূচি এবং বার্তা পাঠানোর ফরম।";
 
 export const Route = createFileRoute("/contact")({

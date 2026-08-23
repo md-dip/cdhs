@@ -4,7 +4,7 @@ import { Layout, PageHeader } from "@/components/site/Layout";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
 import { useT } from "@/lib/i18n";
 
-const title = "নোটিশ বোর্ড — ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
+const title = "নোটিশ বোর্ড | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
 const description = "বিদ্যালয়ের সকল বিজ্ঞপ্তি, পরীক্ষা, ভর্তি ও উপবৃত্তি সংক্রান্ত ঘোষণা।";
 
 export const Route = createFileRoute("/notices/")({

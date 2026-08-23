@@ -3,7 +3,7 @@ import { Layout, PageHeader, Panel } from "@/components/site/Layout";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
 import { useT } from "@/lib/i18n";
 
-const title = "পরিচালনা পর্ষদ — ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
+const title = "পরিচালনা পর্ষদ | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
 const description = "বিদ্যালয় ব্যবস্থাপনা কমিটির বর্তমান সদস্যবৃন্দের তালিকা ও পদবি।";
 
 export const Route = createFileRoute("/committee")({

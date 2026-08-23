@@ -61,7 +61,7 @@ export function AdminShell({ children, session }: { children: ReactNode; session
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
-        <span className="font-semibold">{settings["nameBn"]} — অ্যাডমিন প্যানেল</span>
+        <span className="font-semibold">{settings["nameBn"]} অ্যাডমিন প্যানেল</span>
         <div className="ml-auto flex items-center gap-3 text-xs">
           <span className="hidden sm:inline">
             {session.profile.name} ({session.profile.role})

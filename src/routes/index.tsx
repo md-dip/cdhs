@@ -19,7 +19,7 @@ import { school, slides, stats, results, images } from "@/lib/site-data";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
 import { useT } from "@/lib/i18n";
 
-const title = "ছাতনী ঢেকড়া উচ্চ বিদ্যালয় — প্রচ্ছদ";
+const title = "ছাতনী ঢেকড়া উচ্চ বিদ্যালয় | প্রচ্ছদ";
 const description =
   "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়, আদমদীঘি, বগুড়ার অফিসিয়াল ওয়েবসাইট। নোটিশ, রুটিন, ফলাফল, ভর্তি ও শিক্ষকমণ্ডলীর তথ্য।";
 
@@ -153,7 +153,7 @@ function Index() {
                 </div>
                 <blockquote className="border-s-4 border-gold ps-5 text-sm leading-7 text-muted-foreground">
                   {t(
-                    "প্রিয় শিক্ষার্থী ও অভিভাবকবৃন্দ, ছাতনী ঢেকড়া উচ্চ বিদ্যালয়ের ওয়েবসাইটে আপনাদের স্বাগত জানাই। ১৯৬৯ সাল থেকে এই প্রতিষ্ঠান আদমদীঘি ও বগুড়া অঞ্চলে শিক্ষা বিস্তারে নিরলসভাবে কাজ করে যাচ্ছে। মানসম্মত শিক্ষা, নৈতিক মূল্যবোধ ও ডিজিটাল দক্ষতা—এই তিনটি স্তম্ভের উপর দাঁড়িয়ে আমরা শিক্ষার্থীদের ভবিষ্যতের জন্য প্রস্তুত করছি।",
+                    "প্রিয় শিক্ষার্থী ও অভিভাবকবৃন্দ, ছাতনী ঢেকড়া উচ্চ বিদ্যালয়ের ওয়েবসাইটে আপনাদের স্বাগত জানাই। ১৯৬৯ সাল থেকে এই প্রতিষ্ঠান আদমদীঘি ও বগুড়া অঞ্চলে শিক্ষা বিস্তারে নিরলসভাবে কাজ করে যাচ্ছে। মানসম্মত শিক্ষা, নৈতিক মূল্যবোধ ও ডিজিটাল দক্ষতা, এই তিনটি স্তম্ভের উপর দাঁড়িয়ে আমরা শিক্ষার্থীদের ভবিষ্যতের জন্য প্রস্তুত করছি।",
                     "Dear students and guardians, welcome to the website of Chhatni Dekhra High School. Since 1969 this institution has worked tirelessly to spread education across Adamdighi and Bogura. Quality education, moral values and digital skills are the three pillars on which we prepare our students for the future.",
                   )}
                 </blockquote>

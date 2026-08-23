@@ -4,7 +4,7 @@ import { collectionQueryOptions, usePublished } from "@/lib/queries/collections"
 import { parseRows } from "@/lib/rows";
 import { useT } from "@/lib/i18n";
 
-const title = "শ্রেণি ও পরীক্ষার রুটিন — ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
+const title = "শ্রেণি ও পরীক্ষার রুটিন | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
 const description = "৯ম শ্রেণির শ্রেণি রুটিন ও অর্ধবার্ষিক পরীক্ষার সময়সূচি ২০২৬।";
 
 export const Route = createFileRoute("/routine")({

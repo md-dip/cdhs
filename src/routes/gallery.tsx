@@ -3,7 +3,7 @@ import { Layout, PageHeader } from "@/components/site/Layout";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
 import { useT } from "@/lib/i18n";
 
-const title = "ছবির গ্যালারি — ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
+const title = "ছবির গ্যালারি | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
 const description = "বিদ্যালয়ের ভবন, শ্রেণিকক্ষ, সমাবেশ ও নানা আয়োজনের ছবি।";
 
 export const Route = createFileRoute("/gallery")({

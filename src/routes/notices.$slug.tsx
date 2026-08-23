@@ -14,7 +14,7 @@ export const Route = createFileRoute("/notices/$slug")({
     if (!loaderData) {
       return { meta: [{ title: "নোটিশ পাওয়া যায়নি" }, { name: "robots", content: "noindex" }] };
     }
-    const title = `${loaderData.notice["title"]} — ছাতনী ঢেকড়া উচ্চ বিদ্যালয়`;
+    const title = `${loaderData.notice["title"]} | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়`;
     const description = String(loaderData.notice["body"] ?? "").slice(0, 150);
     return {
       meta: [
