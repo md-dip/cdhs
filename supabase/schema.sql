@@ -306,6 +306,7 @@ create table if not exists public.settings (
   "headMessage" text not null default '',
   motto text not null default '',
   founded text not null default '',
+  mission text not null default '',
   updated_at timestamptz not null default now()
 );
 

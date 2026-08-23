@@ -17,6 +17,7 @@ const fields: { name: string; label: string; type?: "textarea"; full?: boolean }
   { name: "eiin", label: "ইআইআইএন" },
   { name: "founded", label: "প্রতিষ্ঠার সাল" },
   { name: "motto", label: "প্রতিষ্ঠানের মূলমন্ত্র", full: true },
+  { name: "mission", label: "আমাদের লক্ষ্য", type: "textarea", full: true },
   { name: "headName", label: "প্রধান শিক্ষকের নাম" },
   { name: "headTitle", label: "প্রধান শিক্ষকের পদবি" },
   { name: "headPhoto", label: "প্রধান শিক্ষকের ছবির লিংক (মিডিয়া লাইব্রেরি থেকে)", full: true },

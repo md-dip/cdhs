@@ -1,14 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Layout, PageHeader, Panel } from "@/components/site/Layout";
 import { school, images, facilities } from "@/lib/site-data";
+import { pageBySlugQueryOptions } from "@/lib/queries/collections";
 import { useSettings } from "@/lib/queries/settings";
 import { useT } from "@/lib/i18n";
 
 const title = "প্রতিষ্ঠান পরিচিতি | ছাতনী ঢেকড়া উচ্চ বিদ্যালয়";
 const description =
-  "১৯৬৯ সালে প্রতিষ্ঠিত ছাতনী ঢেকড়া উচ্চ বিদ্যালয়ের ইতিহাস, সুযোগ-সুবিধা ও মৌলিক তথ্য।";
+  "১৯৬৫ সালে প্রতিষ্ঠিত ছাতনী ঢেকড়া উচ্চ বিদ্যালয়ের ইতিহাস, সুযোগ-সুবিধা ও মৌলিক তথ্য।";
+
+const HISTORY_FALLBACK =
+  "১৯৬৫ সালে এলাকার শিক্ষানুরাগী ব্যক্তিবর্গের ঐকান্তিক প্রচেষ্টায় ছাতনী দেখরা উচ্চ বিদ্যালয় প্রতিষ্ঠিত হয়। প্রতিষ্ঠাকালে দুটি টিনশেড কক্ষে পাঠদান শুরু হলেও আজ বিদ্যালয়টি একটি ত্রিতল একাডেমিক ভবন, প্রশাসনিক ভবন ও বিস্তৃত খেলার মাঠসহ পূর্ণাঙ্গ শিক্ষাপ্রতিষ্ঠানে রূপ নিয়েছে।\n\nবর্তমানে ষষ্ঠ থেকে দশম শ্রেণি পর্যন্ত বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখায় পাঠদান চলছে। বিদ্যালয়ের শিক্ষার্থীরা প্রতি বছর এসএসসি পরীক্ষায় ঈর্ষণীয় ফলাফল অর্জন করে এবং ক্রীড়া ও সাংস্কৃতিক প্রতিযোগিতায় উপজেলা পর্যায়ে নিয়মিত অংশ নেয়।";
+
+const MISSION_FALLBACK =
+  "মানসম্মত শিক্ষা, নৈতিক মূল্যবোধ ও ডিজিটাল দক্ষতার সমন্বয়ে দেশপ্রেমিক ও দায়িত্বশীল নাগরিক গড়ে তোলা।";
 
 export const Route = createFileRoute("/about")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(pageBySlugQueryOptions("about")),
   head: () => ({
     meta: [
       { title },
@@ -24,6 +32,9 @@ function About() {
   const { tx, n } = useT();
   const settings = useSettings();
   const founded = settings["founded"] || school.founded;
+  const page = Route.useLoaderData();
+  const history = String(page?.["body"] || "") || HISTORY_FALLBACK;
+  const mission = settings["mission"] || MISSION_FALLBACK;
   return (
     <Layout>
       <PageHeader title={tx("প্রতিষ্ঠান পরিচিতি")} subtitle={tx(school.address)} />
@@ -35,15 +46,8 @@ function About() {
             className="h-[320px] w-full rounded-lg object-cover shadow-[var(--shadow-card)]"
           />
           <Panel title={tx("সংক্ষিপ্ত ইতিহাস")}>
-            <p className="text-sm leading-7 text-muted-foreground">
-              {tx(
-                "১৯৬৯ সালে এলাকার শিক্ষানুরাগী ব্যক্তিবর্গের ঐকান্তিক প্রচেষ্টায় ছাতনী দেখরা উচ্চ বিদ্যালয় প্রতিষ্ঠিত হয়। প্রতিষ্ঠাকালে দুটি টিনশেড কক্ষে পাঠদান শুরু হলেও আজ বিদ্যালয়টি একটি ত্রিতল একাডেমিক ভবন, প্রশাসনিক ভবন ও বিস্তৃত খেলার মাঠসহ পূর্ণাঙ্গ শিক্ষাপ্রতিষ্ঠানে রূপ নিয়েছে।",
-              )}
-            </p>
-            <p className="mt-4 text-sm leading-7 text-muted-foreground">
-              {tx(
-                "বর্তমানে ষষ্ঠ থেকে দশম শ্রেণি পর্যন্ত বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখায় পাঠদান চলছে। বিদ্যালয়ের শিক্ষার্থীরা প্রতি বছর এসএসসি পরীক্ষায় ঈর্ষণীয় ফলাফল অর্জন করে এবং ক্রীড়া ও সাংস্কৃতিক প্রতিযোগিতায় উপজেলা পর্যায়ে নিয়মিত অংশ নেয়।",
-              )}
+            <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
+              {tx(history)}
             </p>
           </Panel>
           <Panel title={tx("সুযোগ-সুবিধা")}>
@@ -78,10 +82,8 @@ function About() {
             </dl>
           </Panel>
           <Panel title={tx("আমাদের লক্ষ্য")}>
-            <p className="text-sm leading-7 text-muted-foreground">
-              {tx(
-                "মানসম্মত শিক্ষা, নৈতিক মূল্যবোধ ও ডিজিটাল দক্ষতার সমন্বয়ে দেশপ্রেমিক ও দায়িত্বশীল নাগরিক গড়ে তোলা।",
-              )}
+            <p className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
+              {tx(mission)}
             </p>
           </Panel>
         </aside>

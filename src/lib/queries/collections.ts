@@ -59,6 +59,27 @@ export function noticeBySlugQueryOptions(slug: string) {
   });
 }
 
+const fetchPageBySlugFn = createServerFn({ method: "GET" })
+  .validator(z.object({ slug: z.string() }))
+  .handler(async ({ data }) => {
+    const supabase = getSupabaseServerClient();
+    const { data: row, error } = await supabase
+      .from("pages")
+      .select("*")
+      .eq("slug", data.slug)
+      .eq("status", "published")
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return row as Row | null;
+  });
+
+export function pageBySlugQueryOptions(slug: string) {
+  return queryOptions({
+    queryKey: ["page-by-slug", slug],
+    queryFn: () => fetchPageBySlugFn({ data: { slug } }),
+  });
+}
+
 export function collectionQueryOptions(key: CollectionKey, opts: { onlyPublished?: boolean } = {}) {
   const onlyPublished = opts.onlyPublished ?? false;
   return queryOptions({
