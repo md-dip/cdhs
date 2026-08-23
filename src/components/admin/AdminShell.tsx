@@ -52,8 +52,8 @@ export function AdminShell({ children, session }: { children: ReactNode; session
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-border bg-brand-deep px-4 py-3 text-brand-foreground">
+    <div className="flex h-screen flex-col bg-background">
+      <header className="z-30 flex shrink-0 items-center gap-3 border-b border-border bg-brand-deep px-4 py-3 text-brand-foreground">
         <button
           type="button"
           aria-label="মেনু"
@@ -77,9 +77,9 @@ export function AdminShell({ children, session }: { children: ReactNode; session
         </div>
       </header>
 
-      <div className="mx-auto flex max-w-[1400px]">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1400px] flex-1">
         <aside
-          className={`${open ? "block" : "hidden"} w-full shrink-0 bg-brand-deep p-3 lg:block lg:w-64`}
+          className={`${open ? "block" : "hidden"} w-full shrink-0 overflow-y-auto bg-brand-deep p-3 lg:block lg:w-64`}
         >
           <p className="px-3 pb-1 pt-2 text-[11px] uppercase tracking-wide text-brand-foreground/50">
             সাধারণ
@@ -140,7 +140,7 @@ export function AdminShell({ children, session }: { children: ReactNode; session
           </NavLink>
         </aside>
 
-        <main className="min-w-0 flex-1 p-4 md:p-6">{children}</main>
+        <main className="min-w-0 flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
       </div>
     </div>
   );
