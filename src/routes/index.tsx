@@ -16,7 +16,7 @@ import {
 import { Layout, Panel } from "@/components/site/Layout";
 import { TeacherCard } from "@/components/site/TeacherCard";
 import { StudentsByClassPanel, useStudentTotal } from "@/components/site/StudentsByClassTable";
-import { school, slides, stats, images } from "@/lib/site-data";
+import { school, slides, images } from "@/lib/site-data";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
 import { useSettings } from "@/lib/queries/settings";
 import { useT } from "@/lib/i18n";
@@ -31,6 +31,9 @@ const GLANCE_FALLBACK_BN =
   "১৯৬৫ সালে প্রতিষ্ঠিত এই বিদ্যালয়টি বগুড়া জেলার আদমদীঘি উপজেলার ছাতনী ঢেকড়া এলাকায় অবস্থিত। ষষ্ঠ থেকে দশম শ্রেণি পর্যন্ত বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখায় পাঠদান করা হয়। ডিজিটাল বাংলাদেশ গড়ার লক্ষ্যে বিদ্যালয়ের সকল তথ্য এই ওয়েবসাইটে নিয়মিত হালনাগাদ করা হয়।";
 const GLANCE_FALLBACK_EN =
   "Established in 1965, the school is located at Chhatni Dekhra in Adamdighi upazila of Bogura district. Classes six to ten are taught in the science, humanities and business studies streams. All school information is regularly updated on this website.";
+
+const CLASSROOM_COUNT_FALLBACK = "১৮";
+const PASS_RATE_FALLBACK = "৯৭";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) =>
@@ -71,7 +74,16 @@ function Index() {
   const glanceStats = [
     { label: "শিক্ষার্থী", labelEn: "Students", value: studentTotal },
     { label: "শিক্ষক ও কর্মচারী", labelEn: "Teachers & Staff", value: teachers.length },
-    ...stats,
+    {
+      label: "শ্রেণিকক্ষ",
+      labelEn: "Classrooms",
+      value: settings["classroomCount"] || CLASSROOM_COUNT_FALLBACK,
+    },
+    {
+      label: "পাসের হার (%)",
+      labelEn: "Pass rate (%)",
+      value: settings["passRate"] || PASS_RATE_FALLBACK,
+    },
   ];
   const heroSlides = useMemo(() => {
     const marked = gallery.filter((g) => g["showOnHome"] === "on");

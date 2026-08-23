@@ -17,6 +17,8 @@ const fields: { name: string; label: string; type?: "textarea"; full?: boolean }
   { name: "eiin", label: "ইআইআইএন" },
   { name: "founded", label: "প্রতিষ্ঠার সাল" },
   { name: "motto", label: "প্রতিষ্ঠানের মূলমন্ত্র", full: true },
+  { name: "classroomCount", label: "শ্রেণিকক্ষ সংখ্যা (এক নজরে বিদ্যালয়)" },
+  { name: "passRate", label: "পাসের হার % (এক নজরে বিদ্যালয়)" },
   {
     name: "glanceBn",
     label: "এক নজরে বিদ্যালয় — বিবরণ (বাংলা)",

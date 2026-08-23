@@ -436,10 +436,20 @@ create table if not exists public.settings (
   "missionEn" text not null default '',
   "glanceBn" text not null default '',
   "glanceEn" text not null default '',
+  "classroomCount" text not null default '',
+  "passRate" text not null default '',
   updated_at timestamptz not null default now()
 );
 
 insert into public.settings (id) values (1) on conflict (id) do nothing;
+
+-- classroomCount/passRate pre-date this table's other columns on a live database — add them
+-- and seed the single settings row with the site's original hardcoded "এক নজরে বিদ্যালয়" numbers,
+-- but only if nothing's been entered yet (never overwrites a real admin edit).
+alter table public.settings add column if not exists "classroomCount" text not null default '';
+alter table public.settings add column if not exists "passRate" text not null default '';
+update public.settings set "classroomCount" = '১৮', "passRate" = '৯৭'
+  where id = 1 and "classroomCount" = '' and "passRate" = '';
 
 alter table public.settings enable row level security;
 
