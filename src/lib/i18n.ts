@@ -3,32 +3,19 @@ import { BN_EN, BN_EN_ENTRIES } from "./dictionary";
 
 export type Lang = "bn" | "en";
 
-const KEY = "cdhs-lang";
+// Deliberately not persisted anywhere (no localStorage) — every fresh load of
+// the site starts in Bengali. Switching to English only lasts for the current
+// visit; reloading or coming back later always starts Bengali again.
 let lang: Lang = "bn";
 const listeners = new Set<() => void>();
-let loaded = false;
 
 function emit() {
   listeners.forEach((l) => l());
 }
 
-function ensureLoaded() {
-  if (loaded || typeof window === "undefined") return;
-  loaded = true;
-  queueMicrotask(() => {
-    const saved = localStorage.getItem(KEY);
-    if (saved === "en" || saved === "bn") {
-      lang = saved;
-      document.documentElement.lang = lang;
-      emit();
-    }
-  });
-}
-
 export function setLang(next: Lang) {
   lang = next;
   if (typeof window !== "undefined") {
-    localStorage.setItem(KEY, next);
     document.documentElement.lang = next;
   }
   emit();
@@ -40,7 +27,6 @@ export function toggleLang() {
 
 function subscribe(cb: () => void) {
   listeners.add(cb);
-  ensureLoaded();
   return () => {
     listeners.delete(cb);
   };
