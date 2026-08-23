@@ -252,9 +252,48 @@ create table if not exists public.books (
   code text not null default '',
   "className" text not null default '',
   status text not null default 'published' check (status in ('published', 'unpublished')),
+  sort_order integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+create table if not exists public.results (
+  id uuid primary key default gen_random_uuid(),
+  year text not null default '',
+  exam text not null default '',
+  appeared text not null default '',
+  passed text not null default '',
+  gpa5 text not null default '',
+  status text not null default 'published' check (status in ('published', 'unpublished')),
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- classes/books pre-date sort_order (same idempotent backfill as teachers/committee above).
+alter table public.classes add column if not exists sort_order integer not null default 0;
+alter table public.books add column if not exists sort_order integer not null default 0;
+
+do $$
+declare
+  t text;
+begin
+  foreach t in array array['classes', 'books']
+  loop
+    execute format(
+      $f$
+        with ranked as (
+          select id, row_number() over (order by created_at desc) as rn
+          from public.%1$I
+        )
+        update public.%1$I x set sort_order = ranked.rn
+        from ranked
+        where ranked.id = x.id and x.sort_order = 0;
+      $f$,
+      t
+    );
+  end loop;
+end $$;
 
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
@@ -296,7 +335,7 @@ declare
 begin
   foreach t in array array[
     'notices', 'routines', 'teachers', 'committee', 'students',
-    'admissions', 'classes', 'books', 'posts', 'pages', 'gallery'
+    'admissions', 'classes', 'books', 'results', 'posts', 'pages', 'gallery'
   ]
   loop
     execute format('alter table public.%I enable row level security;', t);
@@ -317,6 +356,47 @@ begin
     );
   end loop;
 end $$;
+
+-- ---------------------------------------------------------------------------
+-- Seed classes/books/results with the site's original hardcoded content, but only
+-- the first time (each guarded by "table is still empty") — the academics page
+-- used to read this from static frontend code; now it reads these tables instead,
+-- so this keeps the public site's content unchanged until an admin edits it.
+-- ---------------------------------------------------------------------------
+insert into public.classes (name, seats, "group", sort_order)
+select * from (values
+  ('ষষ্ঠ শ্রেণি', '১২০', 'সাধারণ', 1),
+  ('সপ্তম শ্রেণি', '১২০', 'সাধারণ', 2),
+  ('অষ্টম শ্রেণি', '১২০', 'সাধারণ', 3),
+  ('নবম শ্রেণি', '১৫০', 'বিজ্ঞান, মানবিক, ব্যবসায় শিক্ষা', 4),
+  ('দশম শ্রেণি', '১৫০', 'বিজ্ঞান, মানবিক, ব্যবসায় শিক্ষা', 5)
+) as seed(name, seats, "group", sort_order)
+where not exists (select 1 from public.classes);
+
+insert into public.books (name, code, sort_order)
+select * from (values
+  ('বাংলা ১ম পত্র', '১০১', 1),
+  ('বাংলা ২য় পত্র', '১০২', 2),
+  ('ইংরেজি ১ম পত্র', '১০৭', 3),
+  ('ইংরেজি ২য় পত্র', '১০৮', 4),
+  ('গণিত', '১০৯', 5),
+  ('পদার্থবিজ্ঞান', '১২৭', 6),
+  ('রসায়ন', '১৩৭', 7),
+  ('জীববিজ্ঞান', '১৩৮', 8),
+  ('ইসলাম ও নৈতিক শিক্ষা', '১৫০', 9),
+  ('বাংলাদেশ ও বিশ্বপরিচয়', '১৫৪', 10),
+  ('ব্যবসায় উদ্যোগ', '১৪৬', 11),
+  ('তথ্য ও যোগাযোগ প্রযুক্তি', '১৫৪', 12)
+) as seed(name, code, sort_order)
+where not exists (select 1 from public.books);
+
+insert into public.results (year, exam, appeared, passed, gpa5, sort_order)
+select * from (values
+  ('২০২৫', 'এসএসসি', '১৪৮', '১৪৩', '২১', 1),
+  ('২০২৪', 'এসএসসি', '১৩৯', '১৩১', '১৭', 2),
+  ('২০২৩', 'এসএসসি', '১৪৫', '১৩৪', '১৪', 3)
+) as seed(year, exam, appeared, passed, gpa5, sort_order)
+where not exists (select 1 from public.results);
 
 -- ---------------------------------------------------------------------------
 -- settings: single row of school-wide info (name, address, phone, ...).

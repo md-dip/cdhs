@@ -20,6 +20,7 @@ const COLLECTION_KEYS = [
   "admissions",
   "classes",
   "books",
+  "results",
   "posts",
   "pages",
   "media",
@@ -28,7 +29,13 @@ const COLLECTION_KEYS = [
 export type CollectionKey = (typeof COLLECTION_KEYS)[number];
 
 /** Collections with an admin-driven drag-and-drop display order (see `sort_order` column). */
-export const ORDERABLE_COLLECTIONS = new Set<CollectionKey>(["teachers", "committee"]);
+export const ORDERABLE_COLLECTIONS = new Set<CollectionKey>([
+  "teachers",
+  "committee",
+  "classes",
+  "books",
+  "results",
+]);
 
 /**
  * True when a Postgrest error means "the `sort_order` migration (supabase/schema.sql) hasn't
@@ -41,6 +48,18 @@ function isMissingSortOrderColumn(error: { code?: string | null; message?: strin
   if (!error) return false;
   if (error.code === "42703") return true;
   return /schema cache/i.test(error.message ?? "");
+}
+
+/**
+ * True when a brand-new collection's table itself hasn't been created in this database yet
+ * (e.g. `results`, added alongside this code but requiring a separate SQL migration). Treated
+ * as "no rows yet" rather than an error, so a page reading a not-yet-migrated collection shows
+ * an empty section instead of crashing.
+ */
+function isMissingTable(error: { code?: string | null; message?: string } | null) {
+  if (!error) return false;
+  if (error.code === "42P01") return true;
+  return /could not find the table/i.test(error.message ?? "");
 }
 
 function buildCollectionQuery(
@@ -77,6 +96,7 @@ const fetchCollectionFn = createServerFn({ method: "GET" })
         false,
       ));
     }
+    if (isMissingTable(error)) return [];
     if (error) throw new Error(error.message);
     return (rows ?? []) as Row[];
   });

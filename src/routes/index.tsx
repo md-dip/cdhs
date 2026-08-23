@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Layout, Panel } from "@/components/site/Layout";
 import { TeacherCard } from "@/components/site/TeacherCard";
-import { school, slides, stats, results, images } from "@/lib/site-data";
+import { school, slides, stats, images } from "@/lib/site-data";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
 import { useSettings } from "@/lib/queries/settings";
 import { useT } from "@/lib/i18n";
@@ -24,7 +24,14 @@ const title = "ছাতনী ঢেকড়া উচ্চ বিদ্য�
 const description =
   "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়, আদমদীঘি, বগুড়ার অফিসিয়াল ওয়েবসাইট। নোটিশ, রুটিন, ফলাফল, ভর্তি ও শিক্ষকমণ্ডলীর তথ্য।";
 
-const HOME_COLLECTIONS = ["notices", "students", "classes", "teachers", "gallery"] as const;
+const HOME_COLLECTIONS = [
+  "notices",
+  "students",
+  "classes",
+  "teachers",
+  "gallery",
+  "results",
+] as const;
 
 const GLANCE_FALLBACK_BN =
   "১৯৬৫ সালে প্রতিষ্ঠিত এই বিদ্যালয়টি বগুড়া জেলার আদমদীঘি উপজেলার ছাতনী ঢেকড়া এলাকায় অবস্থিত। ষষ্ঠ থেকে দশম শ্রেণি পর্যন্ত বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখায় পাঠদান করা হয়। ডিজিটাল বাংলাদেশ গড়ার লক্ষ্যে বিদ্যালয়ের সকল তথ্য এই ওয়েবসাইটে নিয়মিত হালনাগাদ করা হয়।";
@@ -246,7 +253,8 @@ function Index() {
 }
 
 function ResultsTable() {
-  const { t, n } = useT();
+  const { t, n, tx } = useT();
+  const results = usePublished("results");
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -267,12 +275,12 @@ function ResultsTable() {
         </thead>
         <tbody>
           {results.map((r) => (
-            <tr key={r.year} className="border-b border-border/70 last:border-0">
-              <td className="px-3 py-2.5">{n(r.year)}</td>
-              <td className="px-3 py-2.5">{t(r.exam, "SSC")}</td>
-              <td className="px-3 py-2.5">{n(r.appeared)}</td>
-              <td className="px-3 py-2.5">{n(r.passed)}</td>
-              <td className="px-3 py-2.5">{n(r.gpa5)}</td>
+            <tr key={r.id} className="border-b border-border/70 last:border-0">
+              <td className="px-3 py-2.5">{n(String(r["year"] ?? ""))}</td>
+              <td className="px-3 py-2.5">{tx(String(r["exam"] ?? ""))}</td>
+              <td className="px-3 py-2.5">{n(String(r["appeared"] ?? ""))}</td>
+              <td className="px-3 py-2.5">{n(String(r["passed"] ?? ""))}</td>
+              <td className="px-3 py-2.5">{n(String(r["gpa5"] ?? ""))}</td>
             </tr>
           ))}
         </tbody>
