@@ -21,5 +21,9 @@ function SectionPage() {
     );
   }
 
-  return <CrudSection config={config} />;
+  // key forces a fresh CrudSection instance per section — otherwise switching
+  // sections reuses the same component and its internal form state (draft,
+  // editing row, etc.) can carry stale field values from the previous
+  // section's schema into an update for a table that doesn't have them.
+  return <CrudSection key={config.key} config={config} />;
 }
