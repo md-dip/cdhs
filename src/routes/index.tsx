@@ -213,7 +213,6 @@ function Index() {
               <dl className="-mt-2 divide-y divide-border text-sm">
                 {[
                   [t("ইআইআইএন", "EIIN"), school.eiin],
-                  [t("স্কুল কোড", "School code"), school.code],
                   [t("স্থাপিত", "Established"), settings["founded"] || school.founded],
                   [t("বোর্ড", "Board"), t(school.board, "Rajshahi")],
                 ].map(([k, v]) => (

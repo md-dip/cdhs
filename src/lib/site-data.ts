@@ -13,7 +13,6 @@ export const school = {
   phone: "০১৭২৬২৬০৯৯৬",
   email: "info@chhatnidekhrahs.edu.bd",
   eiin: "১১৯১১৯",
-  code: "১৩১৫",
   founded: "১৯৬৯",
   board: "রাজশাহী",
   shift: "দিবা (একক)",

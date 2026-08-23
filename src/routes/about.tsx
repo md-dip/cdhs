@@ -71,7 +71,6 @@ function About() {
                 [tx("প্রতিষ্ঠানের নাম"), tx(school.name)],
                 [tx("ঠিকানা"), tx(school.address)],
                 [tx("ইআইআইএন"), n(school.eiin)],
-                [tx("স্কুল কোড"), n(school.code)],
                 [tx("স্থাপিত"), n(founded)],
                 [tx("শিক্ষা বোর্ড"), tx(school.board)],
                 [tx("শিফট"), tx(school.shift)],
