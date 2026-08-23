@@ -1,18 +1,27 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestUrl } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getServerSession } from "./auth";
 
+const ROLE = z.enum(["super-admin", "editor", "viewer"]);
+
 /**
- * Invites a new admin by email (they set their own password via the emailed link).
- * Uses the Supabase Admin API, which requires the secret key — never exposed to
- * the client. Every call re-checks the caller's own session server-side: a
- * route's beforeLoad only guards navigation through the router, not this
- * function's own HTTP endpoint, so the authorization check has to live here too.
+ * Creates a new admin directly with the password the super-admin sets here —
+ * no invite email involved. Uses the Supabase Admin API (secret key, never
+ * exposed to the client). Every call re-checks the caller's own session
+ * server-side: a route's beforeLoad only guards navigation through the
+ * router, not this function's own HTTP endpoint, so the authorization check
+ * has to live here too.
  */
-export const inviteAdminFn = createServerFn({ method: "POST" })
-  .validator(z.object({ email: z.string().email(), name: z.string().min(1) }))
+export const createAdminFn = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      name: z.string().min(1),
+      email: z.string().email(),
+      password: z.string().min(6),
+      role: ROLE,
+    }),
+  )
   .handler(async ({ data }) => {
     const session = await getServerSession();
     if (!session || session.profile.role !== "super-admin") {
@@ -20,12 +29,21 @@ export const inviteAdminFn = createServerFn({ method: "POST" })
     }
 
     const supabaseAdmin = getSupabaseAdminClient();
-    const redirectTo = new URL("/accept-invite", getRequestUrl()).toString();
-    const { error } = await supabaseAdmin.auth.admin.inviteUserByEmail(data.email, {
-      data: { name: data.name },
-      redirectTo,
+    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.password,
+      email_confirm: true,
+      user_metadata: { name: data.name },
     });
     if (error) throw new Error(error.message);
+
+    // The handle_new_user trigger already created a profiles row with default
+    // role='editor', active=false — overwrite it with what was actually chosen.
+    const { error: profileError } = await supabaseAdmin
+      .from("profiles")
+      .update({ role: data.role, active: true })
+      .eq("id", created.user.id);
+    if (profileError) throw new Error(profileError.message);
   });
 
 /**

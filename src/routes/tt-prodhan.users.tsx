@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Trash2, UserPlus } from "lucide-react";
 import { AdminCard } from "@/components/admin/AdminShell";
 import { useProfiles, useUpdateProfile } from "@/lib/queries/profiles";
-import { inviteAdminFn, removeAdminFn } from "@/lib/server-fns/users";
+import { createAdminFn, removeAdminFn } from "@/lib/server-fns/users";
 
 export const Route = createFileRoute("/tt-prodhan/users")({
   component: UsersPage,
@@ -30,20 +30,25 @@ function UsersPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [inviting, setInviting] = useState(false);
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<(typeof ROLE_OPTIONS)[number]>("editor");
+  const [creating, setCreating] = useState(false);
 
-  const invite = async (e: React.FormEvent) => {
+  const createAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setInviting(true);
+    setCreating(true);
     try {
-      await inviteAdminFn({ data: { name, email } });
-      toast.success("আমন্ত্রণ ইমেইলে পাঠানো হয়েছে");
+      await createAdminFn({ data: { name, email, password, role } });
+      toast.success("নতুন অ্যাডমিন যোগ করা হয়েছে");
       setName("");
       setEmail("");
+      setPassword("");
+      setRole("editor");
+      queryClient.invalidateQueries({ queryKey: ["profiles"] });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "আমন্ত্রণ পাঠানো ব্যর্থ হয়েছে");
+      toast.error(err instanceof Error ? err.message : "যোগ করা ব্যর্থ হয়েছে");
     } finally {
-      setInviting(false);
+      setCreating(false);
     }
   };
 
@@ -58,16 +63,16 @@ function UsersPage() {
 
       {isSuperAdmin ? (
         <AdminCard
-          title="নতুন অ্যাডমিন আমন্ত্রণ"
-          subtitle="ইমেইলে একটি লিংক যাবে, সেখান থেকে পাসওয়ার্ড সেট করতে হবে"
+          title="নতুন অ্যাডমিন যোগ করুন"
+          subtitle="নাম, ইমেইল, পাসওয়ার্ড ও অনুমতি দিয়ে সরাসরি অ্যাকাউন্ট তৈরি হবে — কোনো ইমেইল পাঠানো হবে না"
         >
-          <form onSubmit={invite} className="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
+          <form onSubmit={createAdmin} className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium" htmlFor="invite-name">
+              <label className="mb-1 block text-sm font-medium" htmlFor="new-name">
                 নাম
               </label>
               <input
-                id="invite-name"
+                id="new-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -75,11 +80,11 @@ function UsersPage() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium" htmlFor="invite-email">
+              <label className="mb-1 block text-sm font-medium" htmlFor="new-email">
                 ইমেইল
               </label>
               <input
-                id="invite-email"
+                id="new-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -87,11 +92,42 @@ function UsersPage() {
                 required
               />
             </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium" htmlFor="new-password">
+                পাসওয়ার্ড
+              </label>
+              <input
+                id="new-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                minLength={6}
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium" htmlFor="new-role">
+                অনুমতি
+              </label>
+              <select
+                id="new-role"
+                value={role}
+                onChange={(e) => setRole(e.target.value as (typeof ROLE_OPTIONS)[number])}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                {ROLE_OPTIONS.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </div>
             <button
-              disabled={inviting}
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60"
+              disabled={creating}
+              className="inline-flex w-fit items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60 md:col-span-2"
             >
-              <UserPlus className="size-4" /> আমন্ত্রণ পাঠান
+              <UserPlus className="size-4" /> যোগ করুন
             </button>
           </form>
         </AdminCard>

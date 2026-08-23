@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AcademicsRouteImport } from './routes/academics'
-import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as AdminLoginRouteImport } from './routes/admin-login'
 import { Route as CommitteeRouteImport } from './routes/committee'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -42,11 +41,6 @@ const AboutRoute = AboutRouteImport.update({
 const AcademicsRoute = AcademicsRouteImport.update({
   id: '/academics',
   path: '/academics',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AcceptInviteRoute = AcceptInviteRouteImport.update({
-  id: '/accept-invite',
-  path: '/accept-invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -129,7 +123,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/academics': typeof AcademicsRoute
-  '/accept-invite': typeof AcceptInviteRoute
   '/admin-login': typeof AdminLoginRoute
   '/committee': typeof CommitteeRoute
   '/contact': typeof ContactRoute
@@ -150,7 +143,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/academics': typeof AcademicsRoute
-  '/accept-invite': typeof AcceptInviteRoute
   '/admin-login': typeof AdminLoginRoute
   '/committee': typeof CommitteeRoute
   '/contact': typeof ContactRoute
@@ -171,7 +163,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/academics': typeof AcademicsRoute
-  '/accept-invite': typeof AcceptInviteRoute
   '/admin-login': typeof AdminLoginRoute
   '/committee': typeof CommitteeRoute
   '/contact': typeof ContactRoute
@@ -194,7 +185,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/academics'
-    | '/accept-invite'
     | '/admin-login'
     | '/committee'
     | '/contact'
@@ -215,7 +205,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/academics'
-    | '/accept-invite'
     | '/admin-login'
     | '/committee'
     | '/contact'
@@ -235,7 +224,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/academics'
-    | '/accept-invite'
     | '/admin-login'
     | '/committee'
     | '/contact'
@@ -257,7 +245,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AcademicsRoute: typeof AcademicsRoute
-  AcceptInviteRoute: typeof AcceptInviteRoute
   AdminLoginRoute: typeof AdminLoginRoute
   CommitteeRoute: typeof CommitteeRoute
   ContactRoute: typeof ContactRoute
@@ -289,13 +276,6 @@ declare module '@tanstack/react-router' {
       path: '/academics'
       fullPath: '/academics'
       preLoaderRoute: typeof AcademicsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/accept-invite': {
-      id: '/accept-invite'
-      path: '/accept-invite'
-      fullPath: '/accept-invite'
-      preLoaderRoute: typeof AcceptInviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin-login': {
@@ -434,7 +414,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AcademicsRoute: AcademicsRoute,
-  AcceptInviteRoute: AcceptInviteRoute,
   AdminLoginRoute: AdminLoginRoute,
   CommitteeRoute: CommitteeRoute,
   ContactRoute: ContactRoute,
