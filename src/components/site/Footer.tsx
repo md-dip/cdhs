@@ -10,6 +10,7 @@ const quickLinks = [
   { to: "/academics", label: "একাডেমিক তথ্য", labelEn: "Academics" },
   { to: "/committee", label: "পরিচালনা পর্ষদ", labelEn: "Committee" },
   { to: "/contact", label: "যোগাযোগ", labelEn: "Contact" },
+  { to: "/tt-prodhan", label: "অ্যাডমিন লগইন", labelEn: "Admin login" },
 ] as const;
 
 export function Footer() {
@@ -76,10 +77,6 @@ export function Footer() {
       </div>
       <div className="border-t border-brand-foreground/15 py-4 text-center text-xs text-brand-foreground/70">
         © {n("২০২৬")} {name}. {t("সর্বস্বত্ব সংরক্ষিত", "All rights reserved")}
-        <span className="mx-2 opacity-40">|</span>
-        <a href="/tt-prodhan" className="hover:text-gold">
-          {t("অ্যাডমিন লগইন", "Admin login")}
-        </a>
         <span className="mx-2 opacity-40">|</span>
         <a
           href="https://wa.me/+8801647802658"
