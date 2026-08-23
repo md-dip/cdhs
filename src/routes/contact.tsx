@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { MapPin, Phone, Mail, Clock, School } from "lucide-react";
 import { Layout, PageHeader, Panel } from "@/components/site/Layout";
@@ -26,6 +26,7 @@ const field =
 
 function Contact() {
   const { tx, n } = useT();
+  const [mapLoaded, setMapLoaded] = useState(false);
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     toast.success(tx("আপনার বার্তা পাঠানো হয়েছে।"));
@@ -63,15 +64,25 @@ function Contact() {
             </li>
           </ul>
           <div className="mt-5 overflow-hidden rounded-md border border-border">
-            <iframe
-              title={tx("বিদ্যালয়ের অবস্থান")}
-              src="https://www.google.com/maps?q=24.7667314,88.9777527&output=embed"
-              width="100%"
-              height="260"
-              loading="lazy"
-              className="block"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+            {mapLoaded ? (
+              <iframe
+                title={tx("বিদ্যালয়ের অবস্থান")}
+                src="https://www.google.com/maps?q=24.7667314,88.9777527&output=embed"
+                width="100%"
+                height="260"
+                className="block"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setMapLoaded(true)}
+                className="flex h-[260px] w-full flex-col items-center justify-center gap-2 bg-secondary/60 text-sm text-muted-foreground hover:bg-secondary"
+              >
+                <MapPin className="size-6 text-brand" />
+                {tx("মানচিত্র দেখতে ক্লিক করুন")}
+              </button>
+            )}
           </div>
           <a
             href="https://maps.app.goo.gl/ztPYx13AS4FGoqZq7"
