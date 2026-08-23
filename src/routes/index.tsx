@@ -10,11 +10,11 @@ import {
   GraduationCap,
   Images,
   Building2,
-  Phone,
-  User,
+  Users,
   MessageSquare,
 } from "lucide-react";
 import { Layout, Panel } from "@/components/site/Layout";
+import { TeacherCard } from "@/components/site/TeacherCard";
 import { school, slides, stats, results, images } from "@/lib/site-data";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
 import { useSettings } from "@/lib/queries/settings";
@@ -350,37 +350,30 @@ function StudentsPanel() {
   );
 }
 
+const HOME_TEACHER_LIMIT = 7;
+
 function TeachersPanel() {
-  const { t, n, tx } = useT();
+  const { t } = useT();
   const teachers = usePublished("teachers");
+  const overflowing = teachers.length > HOME_TEACHER_LIMIT;
+  const shown = overflowing ? teachers.slice(0, HOME_TEACHER_LIMIT) : teachers;
   return (
     <Panel title={t("শিক্ষকমণ্ডলী ও কর্মচারী", "Teachers & staff")}>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {teachers.map((tc) => (
-          <article key={tc.id} className="surface-card p-5 text-center">
-            {tc["photo"] ? (
-              <img
-                src={String(tc["photo"])}
-                alt={String(tc["name"])}
-                className="mx-auto size-20 rounded-full border-2 border-gold object-cover"
-              />
-            ) : (
-              <div className="mx-auto flex size-20 items-center justify-center rounded-full bg-secondary">
-                <User className="size-8 text-brand/70" />
-              </div>
-            )}
-            <h3 className="mt-3 text-sm font-bold text-brand-deep">{tx(String(tc["name"]))}</h3>
-            <p className="mt-1 text-xs text-brand">{tx(String(tc["role"]))}</p>
-            {tc["subject"] ? (
-              <p className="mt-1 text-xs text-muted-foreground">{tx(String(tc["subject"]))}</p>
-            ) : null}
-            {tc["phone"] ? (
-              <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Phone className="size-3.5" /> {n(String(tc["phone"]))}
-              </p>
-            ) : null}
-          </article>
+        {shown.map((tc) => (
+          <TeacherCard key={tc.id} teacher={tc} />
         ))}
+        {overflowing ? (
+          <Link
+            to="/teachers"
+            className="surface-card flex flex-col items-center justify-center gap-2 p-5 text-center text-brand hover:bg-secondary/60"
+          >
+            <Users className="size-8" />
+            <span className="text-sm font-bold">
+              {t("সম্পূর্ণ তালিকা দেখুন", "View full list")}
+            </span>
+          </Link>
+        ) : null}
       </div>
     </Panel>
   );

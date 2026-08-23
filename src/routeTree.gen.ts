@@ -17,6 +17,7 @@ import { Route as CommitteeRouteImport } from './routes/committee'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as RoutineRouteImport } from './routes/routine'
+import { Route as TeachersRouteImport } from './routes/teachers'
 import { Route as TtProdhanRouteImport } from './routes/tt-prodhan'
 import { Route as NoticesIndexRouteImport } from './routes/notices.index'
 import { Route as NoticesSlugRouteImport } from './routes/notices.$slug'
@@ -66,6 +67,11 @@ const GalleryRoute = GalleryRouteImport.update({
 const RoutineRoute = RoutineRouteImport.update({
   id: '/routine',
   path: '/routine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeachersRoute = TeachersRouteImport.update({
+  id: '/teachers',
+  path: '/teachers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TtProdhanRoute = TtProdhanRouteImport.update({
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
   '/routine': typeof RoutineRoute
+  '/teachers': typeof TeachersRoute
   '/tt-prodhan': typeof TtProdhanRouteWithChildren
   '/notices/$slug': typeof NoticesSlugRoute
   '/tt-prodhan/$section': typeof TtProdhanSectionRoute
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
   '/routine': typeof RoutineRoute
+  '/teachers': typeof TeachersRoute
   '/notices/$slug': typeof NoticesSlugRoute
   '/tt-prodhan/$section': typeof TtProdhanSectionRoute
   '/tt-prodhan/guide': typeof TtProdhanGuideRoute
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
   '/routine': typeof RoutineRoute
+  '/teachers': typeof TeachersRoute
   '/tt-prodhan': typeof TtProdhanRouteWithChildren
   '/notices/$slug': typeof NoticesSlugRoute
   '/tt-prodhan/$section': typeof TtProdhanSectionRoute
@@ -190,6 +199,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gallery'
     | '/routine'
+    | '/teachers'
     | '/tt-prodhan'
     | '/notices/$slug'
     | '/tt-prodhan/$section'
@@ -210,6 +220,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gallery'
     | '/routine'
+    | '/teachers'
     | '/notices/$slug'
     | '/tt-prodhan/$section'
     | '/tt-prodhan/guide'
@@ -229,6 +240,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gallery'
     | '/routine'
+    | '/teachers'
     | '/tt-prodhan'
     | '/notices/$slug'
     | '/tt-prodhan/$section'
@@ -250,6 +262,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   GalleryRoute: typeof GalleryRoute
   RoutineRoute: typeof RoutineRoute
+  TeachersRoute: typeof TeachersRoute
   TtProdhanRoute: typeof TtProdhanRouteWithChildren
   NoticesSlugRoute: typeof NoticesSlugRoute
   NoticesIndexRoute: typeof NoticesIndexRoute
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       path: '/routine'
       fullPath: '/routine'
       preLoaderRoute: typeof RoutineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teachers': {
+      id: '/teachers'
+      path: '/teachers'
+      fullPath: '/teachers'
+      preLoaderRoute: typeof TeachersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tt-prodhan': {
@@ -419,6 +439,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   GalleryRoute: GalleryRoute,
   RoutineRoute: RoutineRoute,
+  TeachersRoute: TeachersRoute,
   TtProdhanRoute: TtProdhanRouteWithChildren,
   NoticesSlugRoute: NoticesSlugRoute,
   NoticesIndexRoute: NoticesIndexRoute,

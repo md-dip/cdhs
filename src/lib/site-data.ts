@@ -26,6 +26,7 @@ export const navItems = [
   { to: "/notices", label: "নোটিশ বোর্ড", labelEn: "Notices" },
   { to: "/routine", label: "রুটিন", labelEn: "Routine" },
   { to: "/academics", label: "একাডেমিক তথ্য", labelEn: "Academics" },
+  { to: "/teachers", label: "শিক্ষকমণ্ডলী", labelEn: "Teachers" },
   { to: "/committee", label: "পরিচালনা পর্ষদ", labelEn: "Committee" },
   { to: "/gallery", label: "গ্যালারি", labelEn: "Gallery" },
   { to: "/contact", label: "যোগাযোগ", labelEn: "Contact" },
