@@ -302,6 +302,9 @@ create table if not exists public.settings (
   eiin text not null default '',
   "headName" text not null default '',
   "headTitle" text not null default '',
+  "headPhoto" text not null default '',
+  "headMessage" text not null default '',
+  motto text not null default '',
   updated_at timestamptz not null default now()
 );
 

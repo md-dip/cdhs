@@ -24,7 +24,7 @@ export function Footer() {
           <img src={images.logo} alt="" className="size-12 object-contain" />
           <h3 className="mt-4 text-lg font-bold">{name}</h3>
           <p className="mt-2 text-sm text-brand-foreground/70">
-            {t(school.motto, "Education is light, education is freedom")}
+            {tx(settings["motto"] || school.motto)}
           </p>
         </div>
 

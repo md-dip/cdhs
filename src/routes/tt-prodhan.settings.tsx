@@ -8,15 +8,18 @@ export const Route = createFileRoute("/tt-prodhan/settings")({
   component: SettingsPage,
 });
 
-const fields: { name: string; label: string }[] = [
+const fields: { name: string; label: string; type?: "textarea"; full?: boolean }[] = [
   { name: "nameBn", label: "প্রতিষ্ঠানের নাম (বাংলা)" },
   { name: "nameEn", label: "প্রতিষ্ঠানের নাম (ইংরেজি)" },
   { name: "address", label: "ঠিকানা" },
   { name: "phone", label: "মোবাইল" },
   { name: "email", label: "ইমেইল" },
   { name: "eiin", label: "ইআইআইএন" },
+  { name: "motto", label: "প্রতিষ্ঠানের মূলমন্ত্র", full: true },
   { name: "headName", label: "প্রধান শিক্ষকের নাম" },
   { name: "headTitle", label: "প্রধান শিক্ষকের পদবি" },
+  { name: "headPhoto", label: "প্রধান শিক্ষকের ছবির লিংক (মিডিয়া লাইব্রেরি থেকে)", full: true },
+  { name: "headMessage", label: "প্রধান শিক্ষকের বাণী", type: "textarea", full: true },
 ];
 
 function SettingsPage() {
@@ -44,16 +47,26 @@ function SettingsPage() {
           }}
         >
           {fields.map((f) => (
-            <div key={f.name}>
+            <div key={f.name} className={f.full ? "md:col-span-2" : ""}>
               <label className="mb-1 block text-sm font-medium" htmlFor={f.name}>
                 {f.label}
               </label>
-              <input
-                id={f.name}
-                value={draft[f.name] ?? ""}
-                onChange={(e) => setDraft({ ...draft, [f.name]: e.target.value })}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              />
+              {f.type === "textarea" ? (
+                <textarea
+                  id={f.name}
+                  rows={5}
+                  value={draft[f.name] ?? ""}
+                  onChange={(e) => setDraft({ ...draft, [f.name]: e.target.value })}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                />
+              ) : (
+                <input
+                  id={f.name}
+                  value={draft[f.name] ?? ""}
+                  onChange={(e) => setDraft({ ...draft, [f.name]: e.target.value })}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                />
+              )}
             </div>
           ))}
           <div className="md:col-span-2">

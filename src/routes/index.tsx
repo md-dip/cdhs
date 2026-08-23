@@ -17,6 +17,7 @@ import {
 import { Layout, Panel } from "@/components/site/Layout";
 import { school, slides, stats, results, images } from "@/lib/site-data";
 import { collectionQueryOptions, usePublished } from "@/lib/queries/collections";
+import { useSettings } from "@/lib/queries/settings";
 import { useT } from "@/lib/i18n";
 
 const title = "ছাতনী ঢেকড়া উচ্চ বিদ্যালয় | প্রচ্ছদ";
@@ -56,6 +57,7 @@ const quickLinks = [
 function Index() {
   const [i, setI] = useState(0);
   const { t, n, tx } = useT();
+  const settings = useSettings();
   const notices = usePublished("notices");
   useEffect(() => {
     const tm = setInterval(() => setI((p) => (p + 1) % slides.length), 5000);
@@ -140,22 +142,17 @@ function Index() {
               <div className="flex flex-col gap-6 md:flex-row">
                 <div className="shrink-0 text-center">
                   <img
-                    src={images.headmaster}
-                    alt={t("মো. মাহবুবুর রহমান", "Md. Mahbubur Rahman")}
+                    src={settings["headPhoto"] || images.headmaster}
+                    alt={tx(settings["headName"] ?? "")}
                     className="mx-auto size-36 rounded-md border-2 border-gold object-cover"
                   />
                   <p className="mt-3 font-semibold text-brand-deep">
-                    {t("মো. মাহবুবুর রহমান", "Md. Mahbubur Rahman")}
+                    {tx(settings["headName"] ?? "")}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    {t("প্রধান শিক্ষক", "Headmaster")}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{tx(settings["headTitle"] ?? "")}</p>
                 </div>
                 <blockquote className="border-s-4 border-gold ps-5 text-sm leading-7 text-muted-foreground">
-                  {t(
-                    "প্রিয় শিক্ষার্থী ও অভিভাবকবৃন্দ, ছাতনী ঢেকড়া উচ্চ বিদ্যালয়ের ওয়েবসাইটে আপনাদের স্বাগত জানাই। ১৯৬৯ সাল থেকে এই প্রতিষ্ঠান আদমদীঘি ও বগুড়া অঞ্চলে শিক্ষা বিস্তারে নিরলসভাবে কাজ করে যাচ্ছে। মানসম্মত শিক্ষা, নৈতিক মূল্যবোধ ও ডিজিটাল দক্ষতা, এই তিনটি স্তম্ভের উপর দাঁড়িয়ে আমরা শিক্ষার্থীদের ভবিষ্যতের জন্য প্রস্তুত করছি।",
-                    "Dear students and guardians, welcome to the website of Chhatni Dekhra High School. Since 1969 this institution has worked tirelessly to spread education across Adamdighi and Bogura. Quality education, moral values and digital skills are the three pillars on which we prepare our students for the future.",
-                  )}
+                  {tx(settings["headMessage"] ?? "")}
                 </blockquote>
               </div>
             </Panel>
