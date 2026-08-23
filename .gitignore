@@ -29,6 +29,10 @@ dist-ssr
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Local tool state / template metadata — not needed to run or deploy the site
+.claude/
+.lovable/
 .DS_Store
 *.suo
 *.ntvs*
