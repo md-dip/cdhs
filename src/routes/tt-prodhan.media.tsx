@@ -46,6 +46,8 @@ function MediaLibrary() {
   };
 
   const del = (m: (typeof media)[number]) => {
+    if (!window.confirm(`"${String(m["name"])}" স্থায়ীভাবে মুছে ফেলবেন? এটি ফিরিয়ে আনা যাবে না।`))
+      return;
     deleteRow.mutate(m.id, {
       onSuccess: async () => {
         if (m["storage_path"]) {

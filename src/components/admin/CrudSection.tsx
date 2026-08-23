@@ -80,6 +80,8 @@ export function CrudSection({ config }: { config: SectionConfig }) {
   };
 
   const del = (row: Row) => {
+    const label = String(row[config.columns[0]!.name] ?? "");
+    if (!window.confirm(`"${label}" স্থায়ীভাবে মুছে ফেলবেন? এটি ফিরিয়ে আনা যাবে না।`)) return;
     deleteRow.mutate(row.id, {
       onSuccess: () => {
         toast.success("মুছে ফেলা হয়েছে");
