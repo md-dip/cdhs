@@ -1,0 +1,26 @@
+name: Keep Supabase awake
+
+# Supabase's free tier pauses a project after ~7 days with no real database
+# activity. This hits a real table daily so that never happens. The key used
+# here is the publishable key — it's designed to be public (it already ships
+# inside the site's own browser bundle), so it's safe to keep in this file.
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # every day at 06:00 UTC
+  workflow_dispatch: {} # lets you trigger it manually from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query the settings table
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://zuenhhfkbnncqfflrpor.supabase.co/rest/v1/settings?select=id" \
+            -H "apikey: sb_publishable_gMStjZijQ77ZB-r895KYUg_fL-NV1XA")
+          echo "Supabase responded with HTTP $status"
+          if [ "$status" -ge 400 ]; then
+            echo "::error::Unexpected status from Supabase"
+            exit 1
+          fi
