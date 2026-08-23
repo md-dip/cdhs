@@ -251,7 +251,6 @@ export const sections: SectionConfig[] = [
     subtitle: "হোমপেজ ও গ্যালারির ছবি যোগ ও সম্পাদনা করুন।",
     columns: [
       { name: "caption", label: "ক্যাপশন" },
-      { name: "src", label: "ছবির লিংক" },
       { name: "showOnHome", label: "হোমপেজ স্লাইডারে দেখান" },
       { name: "showOnAbout", label: "প্রতিষ্ঠান পরিচিতিতে দেখান" },
     ],
