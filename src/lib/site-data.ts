@@ -47,11 +47,14 @@ export const facilities = [
   "স্কাউট, বিএনসিসি ও সাংস্কৃতিক কার্যক্রম",
 ];
 
+// The "www." variants of these .gov.bd domains serve an invalid/mismatched TLS
+// certificate (browsers block them outright); the bare domains have a valid cert.
+// educationboard.gov.bd doesn't serve HTTPS at all, valid cert or not — http only.
 export const importantSites = [
-  { label: "শিক্ষা মন্ত্রণালয়", href: "https://www.moedu.gov.bd" },
-  { label: "মাউশি", href: "https://www.dshe.gov.bd" },
-  { label: "শিক্ষা বোর্ড", href: "https://www.educationboard.gov.bd" },
-  { label: "এনসিটিবি", href: "https://www.nctb.gov.bd" },
+  { label: "শিক্ষা মন্ত্রণালয়", href: "https://moedu.gov.bd" },
+  { label: "মাউশি", href: "https://dshe.gov.bd" },
+  { label: "শিক্ষা বোর্ড", href: "http://educationboard.gov.bd" },
+  { label: "এনসিটিবি", href: "https://nctb.gov.bd" },
 ];
 
 export const bengaliDigits = ["১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
