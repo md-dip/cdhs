@@ -28,7 +28,7 @@ export const Route = createFileRoute("/academics")({
 });
 
 function Academics() {
-  const { tx, n } = useT();
+  const { t, tx, n } = useT();
   const classes = usePublished("classes");
   const books = usePublished("books");
   const results = usePublished("results");
@@ -66,7 +66,9 @@ function Academics() {
           </div>
         </Panel>
 
-        <StudentsByClassPanel title={tx("শ্রেণি ও লিঙ্গভিত্তিক শিক্ষার্থীর সংখ্যা")} />
+        <StudentsByClassPanel
+          title={t("শ্রেণি ও লিঙ্গভিত্তিক শিক্ষার্থীর সংখ্যা", "Students by class and gender")}
+        />
 
         <Panel title={tx("পাঠ্যপুস্তকের তালিকা")}>
           <ul className="grid gap-3 text-sm md:grid-cols-3">
