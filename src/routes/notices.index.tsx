@@ -22,7 +22,7 @@ export const Route = createFileRoute("/notices/")({
 });
 
 function Notices() {
-  const { tx } = useT();
+  const { tx, bt } = useT();
   const notices = usePublished("notices");
   return (
     <Layout>
@@ -42,7 +42,7 @@ function Notices() {
               </span>
             </div>
             <h2 className="mt-3 text-lg font-bold text-brand-deep">
-              {tx(String(n["title"] ?? ""))}
+              {bt(String(n["title"] ?? ""), String(n["titleEn"] ?? ""))}
             </h2>
             <p className="mt-2 text-sm leading-7 text-muted-foreground">
               {tx(String(n["body"] ?? ""))}

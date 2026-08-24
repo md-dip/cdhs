@@ -38,7 +38,12 @@ export const sections: SectionConfig[] = [
       { name: "date", label: "প্রকাশের সময়" },
     ],
     fields: [
-      { name: "title", label: "নোটিশ শিরোনাম", full: true },
+      { name: "title", label: "নোটিশ শিরোনাম (বাংলা)", full: true },
+      {
+        name: "titleEn",
+        label: "নোটিশ শিরোনাম (ইংরেজি, না দিলে স্বয়ংক্রিয় অনুবাদ দেখানো হবে)",
+        full: true,
+      },
       { name: "slug", label: "ইউআরএল (ইংরেজি অক্ষরে)" },
       { name: "category", label: "ক্যাটাগরি" },
       { name: "date", label: "প্রকাশের সময়" },

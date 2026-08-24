@@ -131,6 +131,7 @@ create trigger on_auth_user_created
 create table if not exists public.notices (
   id uuid primary key default gen_random_uuid(),
   title text not null default '',
+  "titleEn" text not null default '',
   slug text unique,
   category text not null default '',
   date text not null default '',
@@ -140,6 +141,9 @@ create table if not exists public.notices (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- titleEn pre-dates this table's other columns on a live database.
+alter table public.notices add column if not exists "titleEn" text not null default '';
 
 create table if not exists public.routines (
   id uuid primary key default gen_random_uuid(),

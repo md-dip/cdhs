@@ -30,13 +30,13 @@ export const Route = createFileRoute("/notices/$slug")({
 
 function NoticeDetail() {
   const { notice } = Route.useLoaderData();
-  const { tx } = useT();
+  const { tx, bt } = useT();
   return (
     <Layout>
       <div className="mx-auto max-w-3xl px-4 py-10">
         <article className="surface-card p-6">
           <h1 className="text-2xl font-bold text-brand-deep">
-            {tx(String(notice["title"] ?? ""))}
+            {bt(String(notice["title"] ?? ""), String(notice["titleEn"] ?? ""))}
           </h1>
           <div className="mt-3 flex flex-wrap items-center gap-3 text-xs">
             <span className="rounded bg-brand px-2 py-1 font-medium text-brand-foreground">

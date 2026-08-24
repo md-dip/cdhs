@@ -149,7 +149,7 @@ function Index() {
                   params={{ slug: String(nt["slug"]) }}
                   className="text-foreground hover:text-brand"
                 >
-                  ◆ {tx(String(nt["title"]))}
+                  ◆ {bt(String(nt["title"] ?? ""), String(nt["titleEn"] ?? ""))}
                 </Link>
               ))}
             </div>
@@ -217,7 +217,7 @@ function Index() {
                       params={{ slug: String(nt["slug"]) }}
                       className="text-sm font-medium text-foreground hover:text-brand"
                     >
-                      {tx(String(nt["title"]))}
+                      {bt(String(nt["title"] ?? ""), String(nt["titleEn"] ?? ""))}
                     </Link>
                     <p className="mt-1 text-xs text-muted-foreground">{tx(String(nt["date"]))}</p>
                   </li>
