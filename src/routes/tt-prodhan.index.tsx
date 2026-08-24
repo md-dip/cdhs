@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminCard } from "@/components/admin/AdminShell";
 import { sections } from "@/lib/admin-config";
 import { useCollection } from "@/lib/queries/collections";
+import { useStudentTotal } from "@/components/site/StudentsByClassTable";
 
 export const Route = createFileRoute("/tt-prodhan/")({
   component: Dashboard,
@@ -11,7 +12,7 @@ function Dashboard() {
   const { session } = Route.useRouteContext();
   const notices = useCollection("notices");
   const teachers = useCollection("teachers");
-  const students = useCollection("students");
+  const studentTotal = useStudentTotal();
   const routines = useCollection("routines");
   const posts = useCollection("posts");
   const media = useCollection("media");
@@ -19,7 +20,7 @@ function Dashboard() {
   const cards = [
     { label: "নোটিশ", value: notices.length },
     { label: "শিক্ষক ও কর্মচারী", value: teachers.length },
-    { label: "শিক্ষার্থী", value: students.length },
+    { label: "শিক্ষার্থী", value: studentTotal },
     { label: "রুটিন", value: routines.length },
     { label: "পোস্ট ও সংবাদ", value: posts.length },
     { label: "মিডিয়া ফাইল", value: media.length },
