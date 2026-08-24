@@ -314,6 +314,7 @@ create table if not exists public.pages (
 create table if not exists public.gallery (
   id uuid primary key default gen_random_uuid(),
   caption text not null default '',
+  "captionEn" text not null default '',
   src text not null default '',
   "showOnHome" text not null default 'off' check ("showOnHome" in ('on', 'off')),
   "showOnAbout" text not null default 'off' check ("showOnAbout" in ('on', 'off')),
@@ -322,7 +323,8 @@ create table if not exists public.gallery (
   updated_at timestamptz not null default now()
 );
 
--- showOnAbout pre-dates this table's other columns on a live database.
+-- captionEn/showOnAbout pre-date this table's other columns on a live database.
+alter table public.gallery add column if not exists "captionEn" text not null default '';
 alter table public.gallery add column if not exists "showOnAbout" text not null default 'off'
   check ("showOnAbout" in ('on', 'off'));
 

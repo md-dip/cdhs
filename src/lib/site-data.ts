@@ -33,9 +33,9 @@ export const navItems = [
 ] as const;
 
 export const slides = [
-  { src: schoolBuilding, caption: "আমাদের বিদ্যালয় ভবন" },
-  { src: classroom, caption: "শ্রেণিকক্ষে পাঠদান" },
-  { src: assembly, caption: "প্রাত্যহিক সমাবেশ" },
+  { src: schoolBuilding, caption: "আমাদের বিদ্যালয় ভবন", captionEn: "Our school building" },
+  { src: classroom, caption: "শ্রেণিকক্ষে পাঠদান", captionEn: "Teaching in the classroom" },
+  { src: assembly, caption: "প্রাত্যহিক সমাবেশ", captionEn: "Daily assembly" },
 ];
 
 export const facilities = [

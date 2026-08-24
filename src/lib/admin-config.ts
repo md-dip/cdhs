@@ -227,7 +227,12 @@ export const sections: SectionConfig[] = [
       { name: "showOnAbout", label: "প্রতিষ্ঠান পরিচিতিতে দেখান" },
     ],
     fields: [
-      { name: "caption", label: "ক্যাপশন", full: true },
+      { name: "caption", label: "ক্যাপশন (বাংলা)", full: true },
+      {
+        name: "captionEn",
+        label: "ক্যাপশন (ইংরেজি, না দিলে স্বয়ংক্রিয় অনুবাদ দেখানো হবে)",
+        full: true,
+      },
       { name: "src", label: "ছবির লিংক (মিডিয়া লাইব্রেরি থেকে)", full: true },
       {
         name: "showOnHome",

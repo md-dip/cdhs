@@ -88,7 +88,11 @@ function Index() {
   const heroSlides = useMemo(() => {
     const marked = gallery.filter((g) => g["showOnHome"] === "on");
     return marked.length > 0
-      ? marked.map((g) => ({ src: String(g["src"] ?? ""), caption: String(g["caption"] ?? "") }))
+      ? marked.map((g) => ({
+          src: String(g["src"] ?? ""),
+          caption: String(g["caption"] ?? ""),
+          captionEn: String(g["captionEn"] ?? ""),
+        }))
       : slides;
   }, [gallery]);
   useEffect(() => {
@@ -107,13 +111,13 @@ function Index() {
             <img
               key={s.caption + idx}
               src={s.src}
-              alt={s.caption}
+              alt={bt(s.caption, s.captionEn)}
               className={`h-[280px] w-full object-cover md:h-[420px] ${idx === i ? "block" : "hidden"}`}
             />
           ))}
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-deep/80 to-transparent px-6 py-5">
             <p className="text-lg font-medium text-brand-foreground">
-              {tx(heroSlides[i]?.caption ?? "")}
+              {bt(heroSlides[i]?.caption ?? "", heroSlides[i]?.captionEn ?? "")}
             </p>
           </div>
           <button
