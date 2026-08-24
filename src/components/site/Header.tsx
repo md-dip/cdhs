@@ -17,7 +17,7 @@ export function Header() {
     eiin: settings["eiin"] ?? "",
     founded: settings["founded"] || staticSchool.founded,
   };
-  const addressEn = "Chhatni Dekhra, Adamdighi, Bogura";
+  const addressEn = "Chhatni Dhekra, Adamdighi, Bogura";
 
   return (
     <header>

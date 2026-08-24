@@ -13,7 +13,7 @@ export const Route = createFileRoute("/admin-login")({
   },
   head: () => ({
     meta: [
-      { title: "অ্যাডমিন লগইন | Chhatni Dekhra High School" },
+      { title: "অ্যাডমিন লগইন | Chhatni Dhekra High School" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

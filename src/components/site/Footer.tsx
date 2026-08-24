@@ -62,7 +62,7 @@ export function Footer() {
           <ul className="mt-4 space-y-3 text-sm text-brand-foreground/80">
             <li className="flex gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0" />
-              {t(school.address, "Chhatni Dekhra, Adamdighi, Bogura")}
+              {t(school.address, "Chhatni Dhekra, Adamdighi, Bogura")}
             </li>
             <li className="flex gap-2">
               <Phone className="mt-0.5 size-4 shrink-0" />

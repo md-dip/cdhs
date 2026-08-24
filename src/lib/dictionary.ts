@@ -67,8 +67,8 @@ export const BN_EN: Record<string, string> = {
   বার্তা: "Message",
   "পাঠিয়ে দিন": "Send",
   "আপনার বার্তা পাঠানো হয়েছে।": "Your message has been sent.",
-  "১৯৬৯ সালে এলাকার শিক্ষানুরাগী ব্যক্তিবর্গের ঐকান্তিক প্রচেষ্টায় ছাতনী দেখরা উচ্চ বিদ্যালয় প্রতিষ্ঠিত হয়। প্রতিষ্ঠাকালে দুটি টিনশেড কক্ষে পাঠদান শুরু হলেও আজ বিদ্যালয়টি একটি ত্রিতল একাডেমিক ভবন, প্রশাসনিক ভবন ও বিস্তৃত খেলার মাঠসহ পূর্ণাঙ্গ শিক্ষাপ্রতিষ্ঠানে রূপ নিয়েছে।":
-    "Chhatni Dekhra High School was founded in 1969 through the dedicated efforts of local education lovers. It started with two tin-shed rooms and today it is a full-fledged institution with a three-storey academic building, an administrative block and a spacious playground.",
+  "১৯৬৯ সালে এলাকার শিক্ষানুরাগী ব্যক্তিবর্গের ঐকান্তিক প্রচেষ্টায় ছাতনী ঢেকড়া উচ্চ বিদ্যালয় প্রতিষ্ঠিত হয়। প্রতিষ্ঠাকালে দুটি টিনশেড কক্ষে পাঠদান শুরু হলেও আজ বিদ্যালয়টি একটি ত্রিতল একাডেমিক ভবন, প্রশাসনিক ভবন ও বিস্তৃত খেলার মাঠসহ পূর্ণাঙ্গ শিক্ষাপ্রতিষ্ঠানে রূপ নিয়েছে।":
+    "Chhatni Dhekra High School was founded in 1969 through the dedicated efforts of local education lovers. It started with two tin-shed rooms and today it is a full-fledged institution with a three-storey academic building, an administrative block and a spacious playground.",
   "বর্তমানে ষষ্ঠ থেকে দশম শ্রেণি পর্যন্ত বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখায় পাঠদান চলছে। বিদ্যালয়ের শিক্ষার্থীরা প্রতি বছর এসএসসি পরীক্ষায় ঈর্ষণীয় ফলাফল অর্জন করে এবং ক্রীড়া ও সাংস্কৃতিক প্রতিযোগিতায় উপজেলা পর্যায়ে নিয়মিত অংশ নেয়।":
     "Classes six to ten are currently taught in the science, humanities and business studies streams. Our students achieve excellent SSC results every year and regularly take part in sports and cultural competitions at the upazila level.",
   "মানসম্মত শিক্ষা, নৈতিক মূল্যবোধ ও ডিজিটাল দক্ষতার সমন্বয়ে দেশপ্রেমিক ও দায়িত্বশীল নাগরিক গড়ে তোলা।":
@@ -205,9 +205,9 @@ export const BN_EN: Record<string, string> = {
   "৫ম": "5th",
   "দিবা (একক)": "Day (single)",
   রাজশাহী: "Rajshahi",
-  "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়": "Chhatni Dekhra High School",
-  "ছাতনী, ছাতনী ঢেকড়া, আদমদীঘি, বগুড়া": "Chhatni, Chhatni Dekhra, Adamdighi, Bogura",
-  "ছাতনী ঢেকড়া, আদমদীঘি, বগুড়া": "Chhatni Dekhra, Adamdighi, Bogura",
+  "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়": "Chhatni Dhekra High School",
+  "ছাতনী, ছাতনী ঢেকড়া, আদমদীঘি, বগুড়া": "Chhatni, Chhatni Dhekra, Adamdighi, Bogura",
+  "ছাতনী ঢেকড়া, আদমদীঘি, বগুড়া": "Chhatni Dhekra, Adamdighi, Bogura",
   "শিক্ষাই আলো, শিক্ষাই মুক্তি": "Education is light, education is freedom",
   "শনিবার – বৃহস্পতিবার, সকাল ১০টা – বিকাল ৪টা": "Saturday – Thursday, 10:00 AM – 4:00 PM",
 

@@ -84,14 +84,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // The site has its own Bengali/English toggle — this stops the browser's
       // own auto-translate from also kicking in and fighting with it.
       { name: "google", content: "notranslate" },
-      { title: "ছাতনী ঢেকড়া উচ্চ বিদ্যালয় | Chhatni Dekhra High School" },
+      { title: "ছাতনী ঢেকড়া উচ্চ বিদ্যালয় | Chhatni Dhekra High School" },
       {
         name: "description",
         content:
           "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়, ছাতনী, আদমদীঘি, বগুড়া, ইআইআইএন ১১৯১১৯। নোটিশ, রুটিন, ফলাফল ও ভর্তি তথ্য।",
       },
-      { name: "author", content: "Chhatni Dekhra High School" },
-      { property: "og:title", content: "ছাতনী ঢেকড়া উচ্চ বিদ্যালয় | Chhatni Dekhra High School" },
+      { name: "author", content: "Chhatni Dhekra High School" },
+      { property: "og:title", content: "ছাতনী ঢেকড়া উচ্চ বিদ্যালয় | Chhatni Dhekra High School" },
       {
         property: "og:description",
         content:

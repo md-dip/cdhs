@@ -1,4 +1,4 @@
--- CHHATNI DEKHRA HIGH SCHOOL website — Supabase schema
+-- CHHATNI DHEKRA HIGH SCHOOL website — Supabase schema
 --
 -- Run this once in the Supabase dashboard: Project -> SQL Editor -> New query -> paste -> Run.
 -- It is safe to re-run (uses IF NOT EXISTS / ON CONFLICT DO NOTHING) except for the CREATE POLICY

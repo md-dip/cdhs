@@ -12,7 +12,7 @@ export const Route = createFileRoute("/tt-prodhan")({
   },
   head: () => ({
     meta: [
-      { title: "অ্যাডমিন প্যানেল | Chhatni Dekhra High School" },
+      { title: "অ্যাডমিন প্যানেল | Chhatni Dhekra High School" },
       {
         name: "description",
         content: "ছাতনী ঢেকড়া উচ্চ বিদ্যালয়ের ওয়েবসাইট নিয়ন্ত্রণ প্যানেল।",
