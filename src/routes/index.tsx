@@ -178,11 +178,14 @@ function Index() {
                 <div className="shrink-0 text-center">
                   <img
                     src={settings["headPhoto"] || images.headmaster}
-                    alt={tx(settings["headName"] ?? "")}
+                    alt={bt(
+                      String(settings["headName"] ?? ""),
+                      String(settings["headNameEn"] ?? ""),
+                    )}
                     className="mx-auto size-36 rounded-md border-2 border-gold object-cover"
                   />
                   <p className="mt-3 font-semibold text-brand-deep">
-                    {tx(settings["headName"] ?? "")}
+                    {bt(String(settings["headName"] ?? ""), String(settings["headNameEn"] ?? ""))}
                   </p>
                   <p className="text-xs text-muted-foreground">{tx(settings["headTitle"] ?? "")}</p>
                 </div>

@@ -417,6 +417,7 @@ create table if not exists public.settings (
   email text not null default '',
   eiin text not null default '',
   "headName" text not null default '',
+  "headNameEn" text not null default '',
   "headTitle" text not null default '',
   "headPhoto" text not null default '',
   "headMessageBn" text not null default '',
@@ -448,6 +449,11 @@ update public.settings set "classroomCount" = '১৮', "passRate" = '৯৭'
 alter table public.settings add column if not exists "officeHours" text not null default '';
 update public.settings set "officeHours" = 'শনিবার – বৃহস্পতিবার, সকাল ১০টা – বিকাল ৪টা'
   where id = 1 and "officeHours" = '';
+
+-- headNameEn pre-dates this table's other columns on a live database — no seed value here
+-- (unlike the others above), since it's a personal name and guessing a transliteration
+-- would be wrong; an admin needs to type it in once via সাধারণ সেটিংস.
+alter table public.settings add column if not exists "headNameEn" text not null default '';
 
 alter table public.settings enable row level security;
 

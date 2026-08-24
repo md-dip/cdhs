@@ -39,7 +39,11 @@ const fields: { name: string; label: string; type?: "textarea"; full?: boolean }
     type: "textarea",
     full: true,
   },
-  { name: "headName", label: "প্রধান শিক্ষকের নাম" },
+  { name: "headName", label: "প্রধান শিক্ষকের নাম (বাংলা)" },
+  {
+    name: "headNameEn",
+    label: "প্রধান শিক্ষকের নাম (ইংরেজি, না দিলে স্বয়ংক্রিয় অনুবাদ দেখানো হবে)",
+  },
   { name: "headTitle", label: "প্রধান শিক্ষকের পদবি" },
   { name: "headPhoto", label: "প্রধান শিক্ষকের ছবির লিংক (মিডিয়া লাইব্রেরি থেকে)", full: true },
   { name: "headMessageBn", label: "প্রধান শিক্ষকের বাণী (বাংলা)", type: "textarea", full: true },
