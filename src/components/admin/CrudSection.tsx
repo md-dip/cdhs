@@ -10,6 +10,7 @@ import {
   useUpdateRow,
   type Row,
 } from "@/lib/queries/collections";
+import { formatTodayBn } from "@/lib/i18n";
 import { AdminCard } from "./AdminShell";
 
 function emptyDraft(config: SectionConfig) {
@@ -106,15 +107,21 @@ export function CrudSection({ config }: { config: SectionConfig }) {
         },
       );
     } else {
+      const filled = { ...draft };
+      config.fields.forEach((f) => {
+        if (f.autoToday && !filled[f.name]?.trim()) {
+          filled[f.name] = formatTodayBn();
+        }
+      });
       // New rows join at the very end of the list — one past whatever the highest
       // existing position is — rather than the DB default of 0, which would jump
       // a freshly added teacher/committee member straight to the top.
       const payload: Record<string, string | number> = config.orderable
         ? {
-            ...draft,
+            ...filled,
             sort_order: Math.max(0, ...rows.map((r) => Number(r["sort_order"]) || 0)) + 1,
           }
-        : draft;
+        : filled;
       createRow.mutate(payload, {
         onSuccess: () => {
           toast.success("নতুন তথ্য যোগ করা হয়েছে");

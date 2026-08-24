@@ -6,6 +6,8 @@ export type Field = {
   type?: "text" | "textarea" | "date" | "select" | "password";
   options?: string[];
   full?: boolean;
+  /** When adding a new row with this field left blank, fill it with today's date instead. */
+  autoToday?: boolean;
 };
 
 export type SectionConfig = {
@@ -46,7 +48,7 @@ export const sections: SectionConfig[] = [
       },
       { name: "slug", label: "ইউআরএল (ইংরেজি অক্ষরে)" },
       { name: "category", label: "ক্যাটাগরি" },
-      { name: "date", label: "প্রকাশের সময়" },
+      { name: "date", label: "প্রকাশের সময় (খালি রাখলে আজকের তারিখ বসবে)", autoToday: true },
       { name: "file", label: "সংযুক্ত ফাইল / গুগল ড্রাইভ লিংক" },
       { name: "body", label: "বিস্তারিত", type: "textarea", full: true },
       statusField,

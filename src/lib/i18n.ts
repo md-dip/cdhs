@@ -50,6 +50,39 @@ export function toBnDigits(value: string) {
   return value.replace(/[0-9]/g, (d) => BN_DIGITS[Number(d)] ?? d);
 }
 
+const BN_MONTHS = [
+  "জানুয়ারি",
+  "ফেব্রুয়ারি",
+  "মার্চ",
+  "এপ্রিল",
+  "মে",
+  "জুন",
+  "জুলাই",
+  "আগস্ট",
+  "সেপ্টেম্বর",
+  "অক্টোবর",
+  "নভেম্বর",
+  "ডিসেম্বর",
+];
+
+/**
+ * "২৪ আগস্ট, ২০২৬" for right now, in Asia/Dhaka (not the admin's device timezone) — matches
+ * the format admins already type into date fields by hand, so tx()/n() display it correctly.
+ */
+export function formatTodayBn(): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Dhaka",
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  const day = toBnDigits(get("day"));
+  const month = BN_MONTHS[Number(get("month")) - 1] ?? "";
+  const year = toBnDigits(get("year"));
+  return `${day} ${month}, ${year}`;
+}
+
 export function translate(text: string): string {
   if (!text) return text;
   const trimmed = text.trim();
