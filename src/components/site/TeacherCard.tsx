@@ -17,7 +17,7 @@ export function TeacherCard({ teacher }: { teacher: Row }) {
           <User className="size-8 text-brand/70" />
         </div>
       )}
-      <h3 className="mt-3 text-sm font-bold text-brand-deep">{tx(String(teacher["name"]))}</h3>
+      <h3 className="mt-3 text-sm font-bold text-brand-deep">{String(teacher["name"])}</h3>
       <p className="mt-1 text-xs text-brand">{tx(String(teacher["role"]))}</p>
       {teacher["subject"] ? (
         <p className="mt-1 text-xs text-muted-foreground">{tx(String(teacher["subject"]))}</p>
