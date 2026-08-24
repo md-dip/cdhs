@@ -26,7 +26,7 @@ const field =
   "mt-1.5 w-full rounded-md border border-input bg-surface px-3 py-2 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/30";
 
 function Contact() {
-  const { tx, n } = useT();
+  const { t, tx, n } = useT();
   const settings = useSettings();
   const [mapLoaded, setMapLoaded] = useState(false);
   function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -70,7 +70,7 @@ function Contact() {
           <div className="mt-5 overflow-hidden rounded-md border border-border">
             {mapLoaded ? (
               <iframe
-                title={tx("বিদ্যালয়ের অবস্থান")}
+                title={t("বিদ্যালয়ের অবস্থান", "School location")}
                 src="https://www.google.com/maps?cid=9805689754168255060&output=embed"
                 width="100%"
                 height="260"
@@ -84,7 +84,7 @@ function Contact() {
                 className="flex h-[260px] w-full flex-col items-center justify-center gap-2 bg-secondary/60 text-sm text-muted-foreground hover:bg-secondary"
               >
                 <MapPin className="size-6 text-brand" />
-                {tx("মানচিত্র দেখতে ক্লিক করুন")}
+                {t("মানচিত্র দেখতে ক্লিক করুন", "Click to view map")}
               </button>
             )}
           </div>
@@ -94,7 +94,7 @@ function Contact() {
             rel="noreferrer"
             className="mt-3 inline-block text-xs font-medium text-brand hover:text-brand-deep"
           >
-            {tx("গুগল ম্যাপে দেখুন")}
+            {t("গুগল ম্যাপে দেখুন", "View on Google Maps")}
           </a>
         </Panel>
 
