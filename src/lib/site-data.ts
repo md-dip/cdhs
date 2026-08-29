@@ -11,7 +11,7 @@ export const school = {
   nameEn: "CHHATNI DHEKRA HIGH SCHOOL",
   address: "ছাতনী ঢেকড়া, আদমদীঘি, বগুড়া",
   phone: "০১৭২৬২৬০৯৯৬",
-  email: "info@chhatnidekhrahs.edu.bd",
+  email: "info@chhatnidhekrahs.edu.bd",
   eiin: "১১৯১১৯",
   founded: "১৯৬৯",
   board: "রাজশাহী",
