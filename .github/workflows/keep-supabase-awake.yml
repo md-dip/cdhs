@@ -1,9 +1,14 @@
 name: Keep Supabase awake
 
 # Supabase's free tier pauses a project after ~7 days with no real database
-# activity. This hits a real table daily so that never happens. The key used
-# here is the publishable key — it's designed to be public (it already ships
-# inside the site's own browser bundle), so it's safe to keep in this file.
+# activity. A plain anon SELECT (what this workflow used to do) turned out not
+# to count as "activity" for that check — Supabase still emailed a pause
+# warning even with this running daily. So instead this calls keepalive_ping(),
+# a SECURITY DEFINER function (see supabase/schema.sql) that performs a real
+# UPDATE. The key used here is still just the publishable key — it's designed
+# to be public (it already ships inside the site's own browser bundle), so
+# it's safe to keep in this file; the function is what grants it write access,
+# scoped to exactly one harmless row.
 
 on:
   schedule:
@@ -14,11 +19,14 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Query the settings table
+      - name: Write a heartbeat row via keepalive_ping()
         run: |
-          status=$(curl -s -o /dev/null -w "%{http_code}" \
-            "https://zuenhhfkbnncqfflrpor.supabase.co/rest/v1/settings?select=id" \
-            -H "apikey: sb_publishable_gMStjZijQ77ZB-r895KYUg_fL-NV1XA")
+          status=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            "https://zuenhhfkbnncqfflrpor.supabase.co/rest/v1/rpc/keepalive_ping" \
+            -H "apikey: sb_publishable_gMStjZijQ77ZB-r895KYUg_fL-NV1XA" \
+            -H "Authorization: Bearer sb_publishable_gMStjZijQ77ZB-r895KYUg_fL-NV1XA" \
+            -H "Content-Type: application/json" \
+            -d "{}")
           echo "Supabase responded with HTTP $status"
           if [ "$status" -ge 400 ]; then
             echo "::error::Unexpected status from Supabase"
