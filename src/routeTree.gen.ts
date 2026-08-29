@@ -19,6 +19,7 @@ import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as RoutineRouteImport } from './routes/routine'
 import { Route as TeachersRouteImport } from './routes/teachers'
 import { Route as TtProdhanRouteImport } from './routes/tt-prodhan'
+import { Route as ApiHealthRouteImport } from './routes/api.health'
 import { Route as NoticesIndexRouteImport } from './routes/notices.index'
 import { Route as NoticesSlugRouteImport } from './routes/notices.$slug'
 import { Route as TtProdhanIndexRouteImport } from './routes/tt-prodhan.index'
@@ -78,6 +79,11 @@ const TeachersRoute = TeachersRouteImport.update({
 const TtProdhanRoute = TtProdhanRouteImport.update({
   id: '/tt-prodhan',
   path: '/tt-prodhan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NoticesIndexRoute = NoticesIndexRouteImport.update({
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/routine': typeof RoutineRoute
   '/teachers': typeof TeachersRoute
   '/tt-prodhan': typeof TtProdhanRouteWithChildren
+  '/api/health': typeof ApiHealthRoute
   '/notices/$slug': typeof NoticesSlugRoute
   '/tt-prodhan/$section': typeof TtProdhanSectionRoute
   '/tt-prodhan/activity-log': typeof TtProdhanActivityLogRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/routine': typeof RoutineRoute
   '/teachers': typeof TeachersRoute
+  '/api/health': typeof ApiHealthRoute
   '/notices/$slug': typeof NoticesSlugRoute
   '/tt-prodhan/$section': typeof TtProdhanSectionRoute
   '/tt-prodhan/activity-log': typeof TtProdhanActivityLogRoute
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/routine': typeof RoutineRoute
   '/teachers': typeof TeachersRoute
   '/tt-prodhan': typeof TtProdhanRouteWithChildren
+  '/api/health': typeof ApiHealthRoute
   '/notices/$slug': typeof NoticesSlugRoute
   '/tt-prodhan/$section': typeof TtProdhanSectionRoute
   '/tt-prodhan/activity-log': typeof TtProdhanActivityLogRoute
@@ -210,6 +219,7 @@ export interface FileRouteTypes {
     | '/routine'
     | '/teachers'
     | '/tt-prodhan'
+    | '/api/health'
     | '/notices/$slug'
     | '/tt-prodhan/$section'
     | '/tt-prodhan/activity-log'
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/routine'
     | '/teachers'
+    | '/api/health'
     | '/notices/$slug'
     | '/tt-prodhan/$section'
     | '/tt-prodhan/activity-log'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/routine'
     | '/teachers'
     | '/tt-prodhan'
+    | '/api/health'
     | '/notices/$slug'
     | '/tt-prodhan/$section'
     | '/tt-prodhan/activity-log'
@@ -276,6 +288,7 @@ export interface RootRouteChildren {
   RoutineRoute: typeof RoutineRoute
   TeachersRoute: typeof TeachersRoute
   TtProdhanRoute: typeof TtProdhanRouteWithChildren
+  ApiHealthRoute: typeof ApiHealthRoute
   NoticesSlugRoute: typeof NoticesSlugRoute
   NoticesIndexRoute: typeof NoticesIndexRoute
 }
@@ -350,6 +363,13 @@ declare module '@tanstack/react-router' {
       path: '/tt-prodhan'
       fullPath: '/tt-prodhan'
       preLoaderRoute: typeof TtProdhanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notices/': {
@@ -462,6 +482,7 @@ const rootRouteChildren: RootRouteChildren = {
   RoutineRoute: RoutineRoute,
   TeachersRoute: TeachersRoute,
   TtProdhanRoute: TtProdhanRouteWithChildren,
+  ApiHealthRoute: ApiHealthRoute,
   NoticesSlugRoute: NoticesSlugRoute,
   NoticesIndexRoute: NoticesIndexRoute,
 }
